@@ -1,3 +1,9 @@
+/**
+ * Stack: Trata-se de uma estrutura de dados que usa o esquema FILO: First In, Last Out.
+ * Ou seja, o primeiro elemento a ser colocado na estrutura é o último a ser retira.
+ * 
+*/
+
 #include "stdio.h"
 #include "stdlib.h"
 
@@ -13,15 +19,15 @@ typedef struct {
     struct _element *top;
 } Stack;
 
-void push(Stack *stack, Element *newElement);
+Element* createElement(int value);
 
 int empty(Stack *stack);
+
+void push(Stack *stack, Element *newElement);
 
 Element* pop(Stack *stack);
 
 Element* stackTop(Stack *stack);
-
-Element* createElement(int value);
 
 int main(int argc, char const *argv[]){
     
@@ -71,13 +77,21 @@ int main(int argc, char const *argv[]){
     return EXIT_SUCCESS;
 }
 
-void push(Stack *stack, Element *newElement){
-    newElement->next = stack->top;
-    stack->top = newElement;
+Element* createElement(int value){
+    Element *el = malloc(sizeof(Element));
+    el->value = value;
+    el->next = NULL;
+
+    return el;
 }
 
 int empty(Stack *stack){
     return stack->top == NULL;
+}
+
+void push(Stack *stack, Element *newElement){
+    newElement->next = stack->top;
+    stack->top = newElement;
 }
 
 Element* pop(Stack *stack){
@@ -89,12 +103,4 @@ Element* pop(Stack *stack){
 
 Element* stackTop(Stack *stack){
     return stack->top;
-}
-
-Element* createElement(int value){
-    Element *el = malloc(sizeof(Element));
-    el->value = value;
-    el->next = NULL;
-
-    return el;
 }
