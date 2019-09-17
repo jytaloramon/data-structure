@@ -2,7 +2,7 @@
  * Stack: Trata-se de uma estrutura de dados que usa o esquema FILO: First In, Last Out.
  * Ou seja, o primeiro elemento a ser colocado na estrutura é o último a ser retira.
  * 
-*/
+ */
 
 #include "stdio.h"
 #include "stdlib.h"

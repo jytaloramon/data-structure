@@ -2,7 +2,7 @@
  * Uma Fila é uma estrutura linear que segue uma ordem específica na qual as operações são executadas. 
  * A ordem é First In First Out (FIFO): o primeiro elemento a ser colocado na estrutura é o primeiro a ser retira.
  * 
-*/
+ */
 
 #include "stdio.h"
 #include "stdlib.h"
