@@ -10,16 +10,16 @@
 #define TRUE 1
 #define FALSE 0
 #define MAX 10000
-#define MIDDLECAL(a, b)((a + b) / 2)
+#define CALMIDDLE(a, b)((a + b) / 2)
 
-int array[MAX];
-int tree[MAX * 3];
+int vector[MAX],
+    tree[MAX * 3];
 
-int buildTree(int level, int startInterv, int endInterv);
+int buildTree(int index, int startEspectrum, int endEspectrum);
 
-int updateTree(int level, int startInterv, int endInterv, int posiAlter, int newValue);
+int updateTree(int index, int startEspectrum, int endEspectrum, int id, int value);
 
-int getSum(int level, int startInterv, int endInterv, int queryS, int queryE);
+int getSum(int index, int startEspectrum, int endEspectrum, int startInterv, int endInterv);
 
 void printArray(int length);
 
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]){
     
     for(i = 0; i < lengthArray; i++){
         printf("Valor %d: ", i + 1);
-        scanf("%d", &array[i]);
+        scanf("%d", &vector[i]);
     }
     
     buildTree(0, 0, lengthArray - 1);
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[]){
                 printf("Posicao: ");
                 scanf("%d", &b);
 
-                array[b - 1] = a;
+                vector[b - 1] = a;
                 updateTree(0, 0, lengthArray - 1, b - 1, a);
                 break;
         
@@ -69,46 +69,45 @@ int main(int argc, char const *argv[]){
     return 0;
 }
 
-int buildTree(int level, int startInterv, int endInterv){
-    if(startInterv == endInterv)
-       return tree[level] = array[startInterv];
+int buildTree(int index, int startEspectrum, int endEspectrum){
+    if(startEspectrum == endEspectrum)
+        return tree[index] = vector[startEspectrum];
 
-    int middle = MIDDLECAL(startInterv, endInterv),
-        vLeft = buildTree(level * 2 + 1, startInterv, middle),
-        vRigth = buildTree(level * 2 + 2, middle + 1, endInterv);
+    int middle = CALMIDDLE(startEspectrum, endEspectrum);
 
-    
-    return tree[level] = vLeft + vRigth;
+    return tree[index] = buildTree(index * 2 + 1, startEspectrum, middle) + 
+                         buildTree(index * 2 + 2, middle + 1, endEspectrum);
 }
 
-int updateTree(int level, int startInterv, int endInterv, int posiAlter, int newValue){
-    if(startInterv == endInterv)
-        return tree[level] = newValue;
+int updateTree(int index, int startEspectrum, int endEspectrum, int id, int value){
+    if(startEspectrum == endEspectrum)
+        return tree[index] = value;
+        
+    int middle = CALMIDDLE(startEspectrum, endEspectrum);
 
-    int middle = MIDDLECAL(startInterv, endInterv);
-    if(posiAlter <= middle)
-        return tree[level] = updateTree(level * 2 + 1, startInterv, middle, posiAlter, newValue) + tree[level * 2 + 2];
-
-    return tree[level] = updateTree(level * 2 + 2, middle + 1, endInterv, posiAlter, newValue) + tree[level * 2 + 1];
-}   
-
-int getSum(int level, int startInterv, int endInterv, int queryS, int queryE){
-    if(queryS <= startInterv && queryE >= endInterv)
-        return tree[level];
+    if(id <= middle)
+        return tree[index] = updateTree(index * 2 + 1, startEspectrum, middle, id, value) + tree[index * 2 + 2];
     
-    if(queryS > endInterv || queryE < startInterv)
+    return tree[index] = updateTree(index * 2 + 2, middle + 1, endEspectrum, id, value) + tree[index * 2 + 1];
+}
+
+int getSum(int index, int startEspectrum, int endEspectrum, int startInterv, int endInterv){
+    if(startInterv <= startEspectrum && endEspectrum <= endInterv)
+        return tree[index];
+
+    if(startInterv > endEspectrum || endInterv < startEspectrum)
         return 0;
 
-    int middle = MIDDLECAL(startInterv, endInterv);
-    
-    return getSum(level * 2 + 1, startInterv, middle, queryS, queryE) +
-           getSum(level * 2 + 2, middle + 1, endInterv, queryS, queryE);
+    int middle = CALMIDDLE(startEspectrum, endEspectrum);
+
+    return getSum(index * 2 + 1, startEspectrum, middle, startInterv, endInterv) +
+           getSum(index * 2 + 2, middle + 1, endEspectrum, startInterv, endInterv);
 }
 
 void printArray(int length){
     printf("\nArray:");
     for (int i = 0; i < length; i++)
-        printf(" %d", array[i]);
+        printf(" %d", vector[i]);
     
     printf("\n");
 }
