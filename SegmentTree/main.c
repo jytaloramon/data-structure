@@ -1,12 +1,13 @@
 /**
  * Segment Tree, ou Árvore de Segmentos, é uma das estruturas de dados mais utilizadas na programação competitiva por conta da sua eficiência e versatilidade. 
- * Uma árvore de segmentos é uma estrutura de dados que pode ser usada para executar consultas e atualizações de intervalos. 
+ * Uma árvore de segmentos é uma estrutura de dados que pode ser usada para executar consultas e atualizações de intervalos, consiste em cada nó da árvore possui a soma de seus descendente. 
  * É uma árvore binária com altura equilibrada , geralmente construída em cima de uma matriz. 
  * As árvores de segmento podem ser usadas para resolver consultas de intervalo mínimo / máximo e soma e consultas de atualização de intervalo em tempo O (log n).
  */
 
 #include "stdio.h"
 #include "stdlib.h"
+
 #define TRUE 1
 #define FALSE 0
 #define MAX 10000
