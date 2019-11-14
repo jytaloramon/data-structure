@@ -1,5 +1,8 @@
 /**
- * 
+ * Binary Tree, ou Árvore binária, é uma estrutura de dados onde cada nó tem no máximo dois filhor: um esquedo e um direito.
+ * O nó raiz(root) é o único que não é filho de nenhum outro.
+ * Para todo nó existente seu filho da esquerda terá sua chave/valor menor que seu pai e, o filho a direita terá um valor maior que seu pai.
+ * Ref.: ime.usp.br
  * */
 
 #include "stdio.h"
