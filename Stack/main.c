@@ -1,13 +1,12 @@
 /**
- * Stack: Trata-se de uma estrutura de dados que usa o esquema FILO: First In, Last Out.
- * Ou seja, o primeiro elemento a ser colocado na estrutura é o último a ser retirado.
+ * Stack: Trata-se de uma estrutura de dados que usa o esquema FILO: First In, Last Out;
+ *      Ou seja, o primeiro elemento a ser colocado na estrutura é o último a ser retirado.
+ * Todas as alterações são feitas nas extremidades.
+ * Complexidade de alteração: O(1)
  */
 
 #include "stdio.h"
 #include "stdlib.h"
-
-#define TRUE 1
-#define FALSE 0
 
 typedef struct _element {
     int value;
@@ -21,6 +20,8 @@ typedef struct {
 Element* createElement(int value);
 
 int empty(Stack *stack);
+
+void pip(Stack *stack);
 
 void push(Stack *stack, Element *newElement);
 
@@ -46,19 +47,21 @@ int main(int argc, char const *argv[]){
 
                 elAux = createElement(value);
                 push(&stack, elAux);
+                pip(&stack);
                 break;
         
             case 2:
-                if (empty(&stack) == TRUE)
+                if (empty(&stack))
                     printf("    Pilha Vazia\n");
                 else {
                     elAux = pop(&stack);
                     printf("    Elemento removido: %d\n", elAux->value);
+                    pip(&stack);
                 }
                 break;
             
             case 3:
-                if (empty(&stack) == TRUE)
+                if (empty(&stack))
                     printf("    Pilha Vazia\n");
                 else {
                     elAux = stackTop(&stack);
@@ -71,7 +74,7 @@ int main(int argc, char const *argv[]){
         }
 
         printf("\n"); 
-    } while (TRUE);
+    } while (1);
     
     return EXIT_SUCCESS;
 }
@@ -82,6 +85,17 @@ Element* createElement(int value){
     el->next = NULL;
 
     return el;
+}
+
+void pip(Stack *stack){
+    Element *el = stack->top;
+
+    while (el){
+        printf("%d ", el->value);
+        el = el->next;
+    }
+
+    printf("\n");
 }
 
 int empty(Stack *stack){
