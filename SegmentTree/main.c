@@ -8,8 +8,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#define TRUE 1
-#define FALSE 0
 #define MAX 10000
 #define CALMIDDLE(a, b)((a + b) / 2)
 
@@ -44,29 +42,29 @@ int main(int argc, char const *argv[]){
         scanf("%d", &opt);
 
         switch (opt){
-            case 1:
-                printf("Novo valor: ");
-                scanf("%d", &a);
-                printf("Posicao: ");
-                scanf("%d", &b);
+        case 1:
+            printf("Novo valor: ");
+            scanf("%d", &a);
+            printf("Posicao: ");
+            scanf("%d", &b);
 
-                vector[b - 1] = a;
-                updateTree(0, 0, lengthArray - 1, b - 1, a);
-                break;
+            vector[b - 1] = a;
+            updateTree(0, 0, lengthArray - 1, b - 1, a);
+            break;
+    
+        case 2:
+            printf("Limite inferior: ");
+            scanf("%d", &a);
+            printf("Limite Superior: ");
+            scanf("%d", &b);
+            printf("Soma: %d\n", getSum(0, 0, lengthArray - 1, a - 1, b - 1));
+            break;
+        default: exit(0);
         
-            case 2:
-                printf("Limite inferior: ");
-                scanf("%d", &a);
-                printf("Limite Superior: ");
-                scanf("%d", &b);
-                printf("Soma: %d\n", getSum(0, 0, lengthArray - 1, a - 1, b - 1));
-                break;
-            default:
-                exit(0);
         }
 
         printf("\n"); 
-    } while (TRUE);
+    } while (1);
     return 0;
 }
 
