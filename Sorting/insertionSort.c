@@ -9,38 +9,54 @@
 
 #include "stdio.h"
 #include "stdlib.h"
+#define MAX 10
 
-#define MAX 15
+void swap(int *v1, int *v2);
 
-int vector[MAX] = {5, 10, 3, -10, 11, -1,  0, 1, 2, 112, 122, 112, 0, 5, -1000};
+void sort(int *vector, int length);
 
-void printArray();
+void printArray(int *vector);
 
 int main(int argc, char const *argv[]){
-    
-    int i, j, valueKey;
+    int vector[] = {5, 1, 3, 2, 10, 5, 0, 8, 9, -65};
+
+    printf("########## INSERTION SORT ##########\n\n");
 
     printf("Antes de ordenar: ");
-    printArray();
+    printArray(vector);
+
+    sort(vector, MAX);
+
+    printf("Apos ordenar: ");
+    printArray(vector);
+
+    
+    return 0;
+}
+
+void swap(int *v1, int *v2){
+    int vAux = *v1;
+    *v1 = *v2;
+    *v2 = vAux;
+}
+
+void sort(int *vector, int length){
+    int j, valueKey;
 
     // Percorrendo vetor
-    for (i = 0; i < MAX; i++){
+    for (int i = 0; i < length; i++){
         valueKey = vector[i];
 
-        // Enquanto  tiver elemento e o valor da posicao atual for menor que o anterior eles trocaram de posição
+        // Enquanto tiver elemento e o valor da posicao atual for menor que o anterior eles trocaram de posição
         for (j = i - 1; j >= 0 && valueKey < vector[j]; j--)
             vector[j + 1] = vector[j];
             
         vector[j + 1] = valueKey;
     }
     
-    printf("Apos ordenar: ");
-    printArray();
-
-    return 0;
 }
 
-void printArray(){
+void printArray(int *vector){
     for(int i = 0; i < MAX; i++)
         printf("%d ", vector[i]);
 
