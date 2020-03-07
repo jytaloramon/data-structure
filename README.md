@@ -7,12 +7,12 @@ Implementação das mais variádas estruturas de dados.
 -----
 **Estruturas implementadas**
 - Árvore binária
-- Árvore de segmentos (segmentTree)
+- Árvore de segmentos (segmentTree)(&)
 - Busca
   - Binária
   - Largura (BFS)
   - Profundidade (DFS)
-- Fila
+- Fila(&)
 - Lista
 - Pilha
 - Ordenação
