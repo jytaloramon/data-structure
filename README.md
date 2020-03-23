@@ -1,20 +1,22 @@
-# Algoritmos e Estrutura de Dados
-
-### Em linguageme C e Python
+# Algoritmos e Estrutura de Dados (Data Structure)
 
 Implementação das mais variádas estruturas de dados.
 
 -----
-**Estruturas implementadas**
-- Árvore binária
-- Árvore de segmentos (segmentTree)(removed)
-- Busca
-  - Binária
-  - Largura (BFS)
-  - Profundidade (DFS)
+-----
+
+## Estruturas implementadas
+
+- Árvore (Tree)
+  - Árvore Binária (Binary Tree)
+  - Árvore Binária Indexada (Fenwick Tree - Binary Indexed Tree - BIT)
+  - Árvore de Segmentos (SegmentTree)
+- Busca (Search)
+  - Busca Binária (Binary Search)
 - Fila
-- Lista(removed)
 - Pilha
+- Gráfos (Graphs)
+  - Busca em Largura (Breadth First Search - BFS)
 - Ordenação
   - Bubble
   - Insertion
@@ -23,3 +25,5 @@ Implementação das mais variádas estruturas de dados.
   - Merge
   - Quick
 
+-----
+-----
