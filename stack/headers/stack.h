@@ -1,4 +1,8 @@
 /**
+ * @author: Ytalo Ramon
+*/
+
+/**
  * typedef struct _Stack Stack
 */
 typedef struct _Stack Stack;

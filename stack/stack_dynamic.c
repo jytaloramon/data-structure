@@ -1,3 +1,7 @@
+/**
+ * @author: Ytalo Ramon
+*/
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
