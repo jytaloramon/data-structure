@@ -4,8 +4,6 @@ Em ciência da computação, uma pilha é um conjunto  ordenado de itens no qual
 
 Devido a sua forma de operação essa estrutura de dados possui também um nome alternativo - LIFO (Last-In, Fist-Out) - ou em bom português - UEPS (Último a Entrar é o Primeiro a Sair).
 
-</br>
-
 ----
 ## Operações Primitivas
 As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especiais.  Quando um item é incluído numa pilha, ele é "empilhado"  sobre a pilha   e,  quando  um  item  é  removido,  ele  é "desempilhado".
@@ -13,7 +11,7 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
 > `Definições`:
 > - `s: pilha`
 > - `i: item`
-> - `O(x): complexidade`
+> - `O(x): complexidade pior caso`
 
 - is_empty(s) =: `O(1)`: verifica se *s*  está vazio.
 - pop(s) =: `O(1)`: operação que removerá o item superior de *s* e o retornará como valor da função. 
@@ -34,8 +32,6 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
 - clear(s) =: `O(n)`: remove todos os itens de *s*;
 - search(s, i) =: `O(n)`: procura pelo item *i* na pilha *s*. Caso *i* esteja em *s* é retornado o deslocamento de *i* em relação ao topo de *s*, ou seja, quantos *pop(s)* é necessário para levar *i* até o topo. Caso *i* não seja encontrado é retornado -1 (ou um valor arbitrário que não cause confusão).
 
-</br>
-
 ## [Static Stack (Pilha Estática)](./stack_static.c) 
 
 - Sua implementação é feita com a utilização de vetor (array).
@@ -51,8 +47,6 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
     </figcaption>
   </figure>
 </center>
-
-</br>
 
 ## [Dynamic Stack (Pilha Dinâmica)](./stack_dynamic.c)
 
@@ -70,13 +64,14 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
   </figure>
 </center>
 
-</br>
-
 ## Problems (Problemas)
 
 - [Pilha Antigo - The Huxley](https://thehuxley.com/problem/2394) | [Resolução](https://github.com/jytaloramon/competitive-programming/blob/master/TheHuxley/N3_Pilha%20Antigo.c)
 
 - [Todos os subconjuntos - The Huxley](https://thehuxley.com/problem/419) | [Resolução](https://github.com/jytaloramon/competitive-programming/blob/master/TheHuxley/N4_Todos%20os%20subconjuntos.c)
+
+</br>
+
 ----
 
 ## Referências

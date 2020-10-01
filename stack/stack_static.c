@@ -27,7 +27,7 @@ struct _ItemStack{
  * struct _Stack.
  * _Stack information.
  * attr: int top - top item index.
- * attr: struct _ItemStack *items - pointer array for item instances
+ * attr: struct _ItemStack *items - pointer array for item instances.
 */
 struct _Stack{
     int top;
@@ -35,11 +35,13 @@ struct _Stack{
 };
 
 /**
- * function main 
+ * function main.
 */
 int main(int argc, char const *argv[]){
     
-    Stack stack = {top: 0};
+    Stack stack;
+    initialize_stack(&stack);
+    
     char *value_aux;
     int rs;
 
@@ -109,18 +111,23 @@ int main(int argc, char const *argv[]){
     return 0;
 }
 
+void initialize_stack(Stack *stack){
+    stack->top = -1;
+}
+
 int is_empty(Stack *stack){
-    return stack->top == 0; 
+    return stack->top == -1; 
 }
 
 int is_full(Stack *stack){
-    return stack->top == STACKSIZE;
+    return stack->top == STACKSIZE - 1;
 }
 
 void clear(Stack *stack){
-    if(is_empty(stack)) return;
-
-    while (--stack->top >= 0) stack->items[stack->top].value[0] = '\0';
+    if(!is_empty(stack)) 
+        while (stack->top-- >= 0) stack->items[stack->top].value[0] = '\0';
+        
+    initialize_stack(stack);
 }
 
 char *pop(Stack *stack){
@@ -154,8 +161,11 @@ int search(Stack *stack, char *value){
 
 void show(Stack *stack){
     printf("\n\n");
-    for (int idx = stack->top - 1; idx >= 0 ; idx--)
-        printf("| %d - %s\n", stack->top - idx - 1, stack->items[idx].value);
+    if(is_empty(stack)) printf("EMPTY!\n");
+    else {
+        for (int idx = stack->top - 1; idx >= 0; idx--)
+            printf("| %d - %s\n", stack->top - idx - 1, stack->items[idx].value);
+    }
     
     for(int i = 0; i < STRINGSIZE + 4; i++) printf("-");
     printf("\n\n");

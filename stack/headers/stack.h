@@ -3,44 +3,53 @@
 */
 
 /**
- * typedef struct _Stack Stack
+ * Define the prototype of the struct.
+ * typedef struct _Stack Stack.
+ * 
 */
 typedef struct _Stack Stack;
 
 /**
- * typedef struct _ItemStack ItemStack
+ * Define the prototype of the struct.
+ * typedef struct _ItemStack ItemStack.
 */
 typedef struct _ItemStack ItemStack;
 
 /**
+ * Initialize the stack, set value default.
+ * @param stack Stack pointer.
+*/
+void initialize_stack(Stack *stack);
+
+/**
  * Checks if the stack is empty.
  * @param stack Stack pointer.
- * @return int, 1 if empty or 0 if not empty.
+ * @return int, or 1 if empty or 0 if not empty.
 */
 int is_empty(Stack *stack);
 
 /**
  * Checks if the stack is full.
  * @param stack Stack pointer.
- * @return int, 1 if full or 0 if not full.
+ * @return int, or 1 if full or 0 if not full.
 */
 int is_full(Stack *stack);
 
 /**
  * Removes all items from the Stack.
- * @param stack Stack pointer
+ * @param stack Stack pointer.
 */
 void clear(Stack *stack);
 
 /**
- * Instance a new item.
+ * Instance a new item of the stack.
  * @param value char pointer.
  * @return Item pointer, to new instance.
 */
 ItemStack *new_item(char *value);
 
 /**
- * Remove the item at the top of the stack
+ * Remove the item at the top of the stack.
  * @param stack Stack pointer.
  * @return char pointer, item removed.
 */
@@ -57,7 +66,7 @@ char *push(Stack *stack, char *value);
 /**
  * Return the item on the top of the stack.
  * @param stack Stack pointer.
- * @param char pointer, top item.
+ * @return char pointer, top item.
 */
 char *peek(Stack *stack);
 

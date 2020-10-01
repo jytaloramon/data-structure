@@ -26,18 +26,20 @@ struct _ItemStack{
 /**
  * struct _Stack.
  * _Stack information.
- * attr: struct _ItemStack *top_item - pointer to the top item instance
+ * attr: struct _ItemStack *top_item - pointer to the top item instance.
 */
 struct _Stack{
     struct _ItemStack *top_item;
 };
 
 /**
- * function main 
+ * function main.
 */
 int main(int argc, char const *argv[]){
     
-    Stack stack = {top_item: NULL};
+    Stack stack;
+    initialize_stack(&stack);
+    
     char *value_aux;
     int rs;
 
@@ -107,20 +109,25 @@ int main(int argc, char const *argv[]){
     return 0;
 }
 
+void initialize_stack(Stack *stack){
+    stack->top_item = NULL;
+}
+
 int is_empty(Stack *stack){
     return !stack->top_item;
 }
 
 void clear(Stack *stack){
-    if(is_empty(stack)) return;
-
-    ItemStack *item_actual = stack->top_item, *item_next;
-    while (item_actual){
-        item_next = item_actual->next;
-        free(item_actual);
-        item_actual = item_next;
+    if (!is_empty(stack)){
+        ItemStack *item_actual = stack->top_item, *item_next;
+        while (item_actual){
+            item_next = item_actual->next;
+            free(item_actual);
+            item_actual = item_next;
+        }
     }
-    stack->top_item = NULL;
+    
+    initialize_stack(stack);
 }
 
 ItemStack *new_item(char *value){
@@ -171,14 +178,16 @@ int search(Stack *stack, char *value){
 }
 
 void show(Stack *stack){
-    ItemStack *item_actual = stack->top_item;
-    int idx = 0;
-    
     printf("\n\n");
-    while (item_actual){
-        printf("| %d - %s\n", idx, item_actual->value);
-        item_actual = item_actual->next;
-        idx++;
+    if(is_empty(stack)) printf("EMPTY!\n");
+    else {
+        ItemStack *item_actual = stack->top_item;
+        int idx = 0;
+        while (item_actual){
+            printf("| %d - %s\n", idx, item_actual->value);
+            item_actual = item_actual->next;
+            idx++;
+        }
     }
     
     for(int i = 0; i < STRINGSIZE + 4; i++) printf("-");
