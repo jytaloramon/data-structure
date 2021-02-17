@@ -7,6 +7,12 @@ Implementação das mais variádas estruturas de dados.
 
 ## Estruturas implementadas
 
+
+
+
+
+## Estruturas não implementadas
+
 - Árvore (Tree)
   - Árvore Binária (Binary Tree)
   - Árvore Binária Indexada (Fenwick Tree - Binary Indexed Tree - BIT)
