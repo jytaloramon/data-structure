@@ -1,4 +1,4 @@
-# Algoritmos e Estrutura de Dados (Data Structure)
+# Data Structures and Algorithms (Algoritmos e Estrutura de Dados)
 
 Implementação das mais variádas estruturas de dados.
 
@@ -7,9 +7,8 @@ Implementação das mais variádas estruturas de dados.
 
 ## Estruturas implementadas
 
-
-
-
+- [Tree (Árvore)](./tree/)
+  - [Heap](./tree/README.md#Heap)
 
 ## Estruturas não implementadas
 
