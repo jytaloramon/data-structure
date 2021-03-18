@@ -25,8 +25,6 @@ Legenda
 
 O Heapify é o procedimento pelo qual se mantêm a propriedade de Heap. Esse procedimento tem como entrada o arranjo e um índice *i*. Quando chamado em um procedimento de Min-Heapfify, ou seja, em um Heap Mínimo, é verificado qual dos dois filhos de *i* – *CHILD_LEFT(i)* e *CHILD_RIGHT(i)* – é o menor, e caso ele seja também menor que seu pai ele “flutua para cima”, trocando de posição com seu pai. Esse processo é repetido até que a subárvore de *i* obedeça à propriedade Heap.
 
-</br>
-
 ### Construção do Heap
 
 Podemos usar o procedimento de Heapify de baixo para cima para converter todo o arranjo em Heap.
@@ -84,3 +82,7 @@ Visto que um Heap é baseado em uma árvore binária completa, sua altura é *(l
 ### Principais Aplicações
 - HeapSort;
 - Fila de Prioridade (Priority Queue);
+
+## Referências
+- Cormen, H. T.; Leiserson, C. E.; Rivest, R. L.; Stein, C. Algoritmos: Teoria e Prática. 3ª Edição.
+- [Heap, in Wikipedia.](https://pt.wikipedia.org/wiki/Heap)
