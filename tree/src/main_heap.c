@@ -17,13 +17,13 @@ int main(int argc, char const *argv[]){
     size_t length = 14;
    
     show_arr(array, length);
-    build_heap(array, length, sizeof(int), comp);
+    heap_build(array, length, sizeof(int), comp);
     show_arr(array, length);
 
-    ps = (int *) peek(array, length);
+    ps = (int *) heap_peek(array, length);
     printf("Top: %d\n\n", *ps);
 
-    ps = (int *) remove_heap(array, length, sizeof(int), comp);
+    ps = (int *) heap_remove(array, length, sizeof(int), comp);
     printf("Removed: %d\n\n", *ps);
     free(ps); ps = NULL;
     length--;
@@ -31,16 +31,16 @@ int main(int argc, char const *argv[]){
 
     value = 39;
     printf("Insertion: %d\n\n", value);
-    insert_heap(&value, array, length, sizeof(int), comp);
+    heap_insert(&value, array, length, sizeof(int), comp);
     length++;
     show_arr(array, length);
 
-    ps = (int *) peek(array, length);
+    ps = (int *) heap_peek(array, length);
     printf("Top: %d\n\n", *ps);
 
     value = 24;
     printf("Insertion: %d\n\n", value);
-    insert_heap(&value, array, length, sizeof(int), comp);
+    heap_insert(&value, array, length, sizeof(int), comp);
     length++;
     show_arr(array, length);
 

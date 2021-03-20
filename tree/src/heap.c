@@ -47,7 +47,7 @@ size_t heapify_down(void *elmnt, size_t posi, void *arr, size_t length, size_t s
     return PARENT(i);
 }
 
-int build_heap(void *arr, size_t length, size_t size_m, ICOMPARATOR){
+int heap_build(void *arr, size_t length, size_t size_m, ICOMPARATOR){
     if (length < 1 || size_m < 1)
         return 0;
 
@@ -70,7 +70,7 @@ int build_heap(void *arr, size_t length, size_t size_m, ICOMPARATOR){
     return 1;
 }
 
-int insert_heap(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATOR){
+int heap_insert(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATOR){
 
     if (length < 0 || size_m < 1)
         return 0;
@@ -83,7 +83,7 @@ int insert_heap(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATO
     return 1;
 }
 
-void *remove_heap(void *arr,  size_t length, size_t size_m, ICOMPARATOR){
+void *heap_remove(void *arr,  size_t length, size_t size_m, ICOMPARATOR){
     if (length < 1 || size_m < 1)
         return 0;
 
@@ -102,7 +102,7 @@ void *remove_heap(void *arr,  size_t length, size_t size_m, ICOMPARATOR){
     return obj_aux;
 }
 
-void *peek(void *arr,  size_t length){
+void *heap_peek(void *arr,  size_t length){
     if (length == 0)
         return 0;
 

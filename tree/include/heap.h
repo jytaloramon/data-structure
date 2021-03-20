@@ -39,7 +39,7 @@ size_t heapify_down(void *elmnt, size_t posi, void *arr, size_t length, size_t s
  * @param comparator Function comparator.
  * @return Or 1 on success, or 0 on failure.
 */
-int build_heap(void *arr, size_t length, size_t size_m, ICOMPARATOR);
+int heap_build(void *arr, size_t length, size_t size_m, ICOMPARATOR);
 
 /**
  * Insert a new element.
@@ -50,7 +50,7 @@ int build_heap(void *arr, size_t length, size_t size_m, ICOMPARATOR);
  * @param comparator Function comparator.
  * @return Or 1 on success, or 0 on failure.
 */
-int insert_heap(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATOR);
+int heap_insert(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATOR);
 
 /**
  * Remove the top heap element.
@@ -60,7 +60,7 @@ int insert_heap(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATO
  * @param comparator Function comparator.
  * @return Or the instance removed, or NULL on failure.
 */
-void *remove_heap(void *arr,  size_t length, size_t size_m, ICOMPARATOR);
+void *heap_remove(void *arr,  size_t length, size_t size_m, ICOMPARATOR);
 
 /**
  * Return the top heap element
@@ -68,4 +68,4 @@ void *remove_heap(void *arr,  size_t length, size_t size_m, ICOMPARATOR);
  * @param length Length of array.
  * @return Or the instance element, or NULL on failure.
  */
-void *peek(void *arr,  size_t length);
+void *heap_peek(void *arr,  size_t length);
