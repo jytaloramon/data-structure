@@ -9,6 +9,7 @@ Implementação das mais variádas estruturas de dados.
 
 - [Tree (Árvore)](./tree/)
   - [Heap](./tree/README.md#Heap)
+  - [Binary Tree](./tree/README.md#Binary Tree (Árvore Binária))
 
 ## Estruturas não implementadas
 
