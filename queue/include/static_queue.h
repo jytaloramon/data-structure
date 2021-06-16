@@ -4,20 +4,13 @@
 */
 
 #include "queue.h"
-
-/**
- * Calculate modular arithmetic.
- * @param value int
- * @param div_value int
- * @return int
-*/
-#define MOD(value, div_value) (value % div_value)
+#include "../../math/include/arithmetic.h"
 
 /**
  * struct __Item Item.
  * attr: void *data - payload of data 
 */
-struct _Item{
+struct _ItemQueue {
     void *data;
 };
 
@@ -25,24 +18,25 @@ struct _Item{
  * struct _Queue Queue.
  * attr: int p_front - position of the current first element in the queue.
  * attr: int p_back - position of the current last element in the queue.
- * attr: int length - length queue.
+ * attr: length - number of elements currently present in the queue.
+ * attr: int size - size queue.
  * attr: struct _Item - array of queue elements.
 */
-struct _Queue{
-    size_t p_front, p_back, length;
-    struct _Item *items;
+struct _Queue {
+    int p_front, p_back, length, size;
+    struct _ItemQueue *items;
 };
 
 /**
  * Instance a new queue.
- * @param length Length of queue.
+ * @param size size of queue.
  * @return Or a instance of a queue or NULL on error.
 */
-Queue *new_queue(size_t length);
+Queue *queue_new(int size);
 
 /**
  * Checks if the queue is full.
  * @param queue Queue pointer.
  * @return Or 1 if full or 0 if not full.
 */
-int is_full(Queue *queue);
+int queue_is_full(Queue *queue);
