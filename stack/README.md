@@ -32,7 +32,7 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
 - clear(s) =: `O(n)`: remove todos os itens de *s*;
 - search(s, i) =: `O(n)`: procura pelo item *i* na pilha *s*. Caso *i* esteja em *s* é retornado o deslocamento de *i* em relação ao topo de *s*, ou seja, quantos *pop(s)* é necessário para levar *i* até o topo. Caso *i* não seja encontrado é retornado -1 (ou um valor arbitrário que não cause confusão).
 
-## [Static Stack (Pilha Estática)](./stack_static.c) 
+## [Static Stack (Pilha Estática)](./src/main_static_stack.c) 
 
 - Sua implementação é feita com a utilização de vetor (array).
 - Portanto, os itens são armazenados em um bloco contíguo de memória. Acesso indexado.
@@ -48,7 +48,7 @@ As duas mudanças  que  podem  ser introduzidas numa pilha recebem nomes especia
   </figure>
 </center>
 
-## [Dynamic Stack (Pilha Dinâmica)](./stack_dynamic.c)
+## [Dynamic Stack (Pilha Dinâmica)](./src/main_dynamic_stack.c)
 
 - Implementação com a utilização de lista ligada (Linked List).
 - Alocação de memória dinâmica.
