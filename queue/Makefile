@@ -38,6 +38,6 @@ dynamic_queue.o: $(BUILDPATH) $(SOURCEINCLUDE)/dynamic_queue.h $(SOURCEPATH)/dyn
 	$(COMPILER) $(FLAGS) $(SOURCEPATH)/dynamic_queue.c -c
 	mv dynamic_queue.o $(BUILDPATH)/
 
-main_dynamic_queue: $(BUILDPATH) $(SOURCEPATH)/main_dynamic_queue.c dynamic_queue.o arithmetic.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/dynamic_queue.o $(BUILDPATH)/arithmetic.o $(SOURCEPATH)/main_dynamic_queue.c -o main_dynamic_queue
+main_dynamic_queue: $(BUILDPATH) $(SOURCEPATH)/main_dynamic_queue.c dynamic_queue.o
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/dynamic_queue.o $(SOURCEPATH)/main_dynamic_queue.c -o main_dynamic_queue
 	mv main_dynamic_queue $(BUILDPATH)/

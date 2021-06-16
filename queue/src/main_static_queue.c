@@ -59,6 +59,8 @@ int main(int argc, char const *argv[]){
     };
 
     Queue *queue = queue_new(7);
+
+    printf("+++++ STATIC QUUEUE +++++\n\n");
     queue_show(queue);
     
     for (int i = 0; i < INPUTSIZE; ++i){

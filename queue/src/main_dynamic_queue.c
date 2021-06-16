@@ -58,7 +58,9 @@ int main(int argc, char const *argv[]){
         {DEQUEUE, '_'},
     };
 
-    Queue *queue = queue_new(7);
+    Queue *queue = queue_new();
+
+    printf("+++++ DYNAMIC STACK +++++\n\n");
     queue_show(queue);
     
     for (int i = 0; i < INPUTSIZE; ++i){
