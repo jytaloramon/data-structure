@@ -7,7 +7,12 @@ Implementação das mais variádas estruturas de dados.
 
 ## Estruturas implementadas
 
-- [Tree (Árvore)](./tree/)
+- [Lists](./list/)
+  - [Static List](./list/README.md#Static)
+  - [Doubly Linked List](./list/README.md#Doubly)
+
+- [Trees](./tree/)
+  - [Fenwick Tree || Binary Indexed Tree - BIT](./tree/README.md#Fenwick)
   - [Heap](./tree/README.md#Heap)
   - [Binary Tree](./tree/README.md#Binary)
 
