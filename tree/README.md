@@ -107,6 +107,10 @@ Visto que um Heap é baseado em uma árvore binária completa, sua altura é *(l
 
 ------
 
+# Fenwick Tree || Binary Indexed Tree - BIT (Árvore Binária Indexada)
+
+[ESCREVER]
+
 
 # Heap
 
