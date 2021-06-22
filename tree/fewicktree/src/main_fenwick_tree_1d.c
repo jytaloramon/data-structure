@@ -1,9 +1,13 @@
+/**
+ * @author Ytalo Ramon
+ * @date   18/06/2021
+*/
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "../include/fenwick_tree_1d.h"
 
-// Length array
-#define LEN 12
+#define LEN 12 // Length array
 
 #define INPUTSIZE 13 // Input size for test.
 
@@ -33,21 +37,19 @@ int main(int argc, char const *argv[]){
         {SUMBETWEEN, 0, LEN},
     };
 
-    printf("----- FENWICK TREE (BIT) 1D -----\n\n");
+    int op, rs, v1, v2,
+        array[LEN] = {2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9},
+        array_bit[LEN] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    printf("+++++ FENWICK TREE (BIT) 1D +++++\n\n");
     
-    FenwickStructure *fwks = bitree_new((CoordCartesian){LEN});
+    FenwickStructure *fwks = bitree_new(array, array_bit, (CoordCartesian){LEN});
     
     if (!fwks){
         printf("Memory allocation error!\n");
         exit(0);
     }
     
-    int op, rs, v1, v2;
-    int array[LEN] = {2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9};
-
-    // Copy values from FenwickStructure array;
-    for (int i = 0; i < LEN; ++i)
-        fwks->arr[i] = array[i];
     bitree_build(fwks);
     bitree_show(fwks);
 
@@ -58,13 +60,11 @@ int main(int argc, char const *argv[]){
         switch (op){
         case SUMBETWEEN:
             rs = bitree_sum_between(fwks, (CoordCartesian){v1}, (CoordCartesian){v2});
-            printf("SUMBETWEEN [%d - %d]: %d\n\n", v1, v2, rs);
+            printf(" * SUMBETWEEN [%d - %d]: %d\n\n", v1, v2 - 1, rs);
             break;
         case UPDATE:
-            printf("UPDATE [%d](%d) to (%d)\n\n", v1, fwks->arr[v1], v2);
-            rs = v2 - fwks->arr[v1];
-            fwks->arr[v1] = v2;
-            bitree_update(fwks, rs, (CoordCartesian){v1});
+            printf(" * UPDATE [%d](%d) to (%d)\n\n", v1, fwks->arr[v1], v2);
+            bitree_update(fwks, v2, (CoordCartesian){v1});
             bitree_show(fwks);
         }
     }

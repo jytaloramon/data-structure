@@ -1,30 +1,22 @@
 /**
  * @author Ytalo Ramon
- * @date   10/06/2021
+ * @date   18/06/2021
 */
 
 #include "stdlib.h"
 #include "../include/fenwick_tree_1d.h"
 
-FenwickStructure *bitree_new(CoordCartesian shape){
+
+FenwickStructure *bitree_new(int *arr, int *bitree_arr, CoordCartesian shape){
 
     FenwickStructure *fkws = malloc(sizeof(FenwickStructure));
+    
     if (!fkws)
         return NULL;
 
     fkws->shape.col = shape.col;
-    fkws->arr = malloc(sizeof(int) * fkws->shape.col);
-    fkws->bitree_arr = malloc(sizeof(int) * fkws->shape.col);
-
-    if (!fkws->arr || !fkws->bitree_arr){
-        !fkws->arr ? free(fkws->arr) : free(fkws->bitree_arr);
-        free(fkws);
-        return NULL;
-    }
-
-    // Set default values in the array  
-    for (int i = 0; i < fkws->shape.col; ++i)
-        fkws->arr[i] = fkws->bitree_arr[i] = 0;
+    fkws->arr = arr;
+    fkws->bitree_arr = bitree_arr;
 
     return fkws;
 }
@@ -39,8 +31,11 @@ void bitree_build(FenwickStructure *fwks){
 
 void bitree_update(FenwickStructure *fwks, int value, CoordCartesian coord){
     
+    int dif = value - fwks->arr[coord.col];
+    fwks->arr[coord.col] = value;
+    
     for (int i = coord.col + 1; i <= fwks->shape.col; i += OPBITANDBITCOMP(i))
-        fwks->bitree_arr[i - 1] += value;
+        fwks->bitree_arr[i - 1] += dif;
 }
 
 int bitree_sum(FenwickStructure *fwks, CoordCartesian e_coord){

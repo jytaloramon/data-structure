@@ -1,14 +1,14 @@
 /**
  * @author Ytalo Ramon
- * @date   10/06/2021
+ * @date   18/06/2021
 */
 
 #include "stdlib.h"
 #include "stdio.h"
 #include "../include/fenwick_tree_2d.h"
 
-FenwickStructure *bitree_new(CoordCartesian shape){
-    
+
+FenwickStructure *bitree_new(int **arr, int **bitree_arr, CoordCartesian shape){
     
     FenwickStructure *fkws = malloc(sizeof(FenwickStructure));
     if (!fkws)
@@ -17,44 +17,8 @@ FenwickStructure *bitree_new(CoordCartesian shape){
     fkws->shape.row = shape.row;
     fkws->shape.col = shape.col;
 
-    fkws->arr = malloc(sizeof(int) * fkws->shape.row);
-    fkws->bitree_arr = malloc(sizeof(int) * fkws->shape.row);
-    
-    if (!fkws->arr || !fkws->bitree_arr){
-        !fkws->arr ? free(fkws->arr) : free(fkws->bitree_arr);
-        free(fkws);
-        return NULL;
-    }
-
-    int i = 0, err_malloc = 0;
-
-    // Allocate matrix 
-    while (i < fkws->shape.row && !err_malloc){
-        fkws->arr[i] = malloc(sizeof(int) * fkws->shape.col);
-        fkws->bitree_arr[i] = malloc(sizeof(int) * fkws->shape.col);
-
-        if (!fkws->arr[i] || !fkws->bitree_arr[i]){
-            !fkws->arr[i] ? free(fkws->arr[i]) : free(fkws->bitree_arr[i]);
-            err_malloc = 0;
-        }
-        i++;
-    }
-
-    if (err_malloc){
-        for (int j = 0; j < i - 1; ++j){ // Free: matrix in case of error.
-            free(fkws->arr[j]);
-            free(fkws->bitree_arr[j]);
-        }
-
-        free(fkws);
-
-        return NULL;
-    }
-
-    // Set default values in the array  
-    for (i = 0; i < fkws->shape.row; ++i)
-        for (int j = 0; j < fkws->shape.col; ++j)        
-            fkws->arr[i][j] = fkws->bitree_arr[i][j] = 0;
+    fkws->arr = arr;
+    fkws->bitree_arr = bitree_arr;
 
     return fkws;
 }
@@ -75,10 +39,13 @@ void bitree_build(FenwickStructure *fwks){
 }
 
 void bitree_update(FenwickStructure *fwks, int value, CoordCartesian coord){
+    
+    int dif = value - fwks->arr[coord.row][coord.col];
+    fwks->arr[coord.row][coord.col] = value;
 
-    for (int i = coord.row; i > 0; i -= OPBITANDBITCOMP(i)){
-        for (int j = coord.col; j > 0; j -= OPBITANDBITCOMP(j)){
-            fwks->bitree_arr[i - 1][j - 1] += value;
+    for (int i = coord.row + 1; i <= fwks->shape.row; i += OPBITANDBITCOMP(i)){
+        for (int j = coord.col + 1; j <= fwks->shape.col; j += OPBITANDBITCOMP(j)){
+            fwks->bitree_arr[i - 1][j - 1] += dif;
         }
     }
 }
