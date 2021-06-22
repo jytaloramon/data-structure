@@ -1,30 +1,26 @@
 # Data Structures and Algorithms (Algoritmos e Estrutura de Dados)
 
-Implementação das mais variádas estruturas de dados.
-
------
------
-
 ## Estruturas implementadas
 
-- [Lists](./list/)
+## [Lists](./list/)
   - [Static List](./list/README.md#Static)
   - [Doubly Linked List](./list/README.md#Doubly)
 
-- [Queue](./queue/)
+## [Queues](./queue/)
   - [Static Queue](./queue/README.md#Static)
   - [Dynamic Queue](./queue/README.md#dynamic)
 
-- [Stack](./stack/)
+## [Stacks](./stack/)
   - [Static Stack](./stack/README.md#Static)
   - [Dynamic Stack](./stack/README.md#Dynamic)
 
-- [Trees](./tree/)
-  - [Fenwick Tree || Binary Indexed Tree - BIT](./tree/README.md#Fenwick)
+## [Trees](./tree/)
+  - [Fenwick Tree || Binary Indexed Tree - BIT](./tree/fewicktree/README.md#Binary)
     - Fenwick Tree 1D
     - Fenwick Tree 2D
-  - [Heap](./tree/README.md#Heap)
-  - [Binary Tree](./tree/README.md#Binary)
+  - [Heap](./tree/heap/README.md#Heap)
+  - [Binary Tree](./tree/ binarytree/README.md#Binary)
+  - [Segment Tree](./tree/segmenttree/README.md#Segment)
 
 ## Estruturas não implementadas
 
