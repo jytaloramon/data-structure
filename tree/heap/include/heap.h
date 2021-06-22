@@ -5,7 +5,6 @@
 
 #include "../../includes/icomparator.h"
 #include "../../includes/itree_array.h"
-#include "../../includes/macro.h"
 
 /**
  * Heapify bottom-up
