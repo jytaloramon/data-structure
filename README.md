@@ -15,8 +15,8 @@
   - [Dynamic Stack](./stack/README.md#Dynamic)
 
 ## [Search](./search/)
-  - [Binary Search](./stack/README.md#Binary)
-  - [Ternary Search](./stack/README.md#Ternary)
+  - [Binary Search](./search/README.md#Binary)
+  - [Ternary Search](./search/README.md#Ternary)
 
 ## [Trees](./tree/)
   - [Binary Indexed (Fenwick) Tree - BIT](./tree/fewicktree/README.md#Binary)
