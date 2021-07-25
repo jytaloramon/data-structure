@@ -14,12 +14,15 @@
   - [Static Stack](./stack/README.md#Static)
   - [Dynamic Stack](./stack/README.md#Dynamic)
 
+## [Search](./search/)
+  - [Binary Search](./stack/README.md#Binary)
+  - [Ternary Search](./stack/README.md#Ternary)
+
 ## [Trees](./tree/)
   - [Binary Indexed (Fenwick) Tree - BIT](./tree/fewicktree/README.md#Binary)
     - Fenwick Tree 1D
     - Fenwick Tree 2D
   - [Heap](./tree/heap/README.md#Heap)
-  - [Binary Tree](./tree/ binarytree/README.md#Binary)
   - [Segment Tree](./tree/segmenttree/README.md#Segment)
     - SegTree 1D
     - SegTree 1D with Lazy Propagation (Optimization)
@@ -27,14 +30,6 @@
 
 ## Estruturas não implementadas
 
-- Árvore (Tree)
-  - Árvore Binária (Binary Tree)
-  - Árvore Binária Indexada (Fenwick Tree - Binary Indexed Tree - BIT)
-  - Árvore de Segmentos (SegmentTree)
-- Busca (Search)
-  - Busca Binária (Binary Search)
-- Fila
-- Pilha
 - Gráfos (Graphs)
   - Busca em Largura (Breadth First Search - BFS)
 - Ordenação
