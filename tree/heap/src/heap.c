@@ -1,110 +1,117 @@
 /**
  * @author Ytalo Ramon
- * @date   11/03/2021
-*/
+ * @date   09/08/2021
+ */
 
-#include "stdio.h"
 #include "stdlib.h"
-#include "string.h"
 #include "../include/heap.h"
 
-size_t heapify_up(void *elmnt, size_t posi, void *arr, size_t length, size_t size_m, ICOMPARATOR){
-    
-    size_t i = posi, parent = PARENT(i);
 
-    while (i > 0 && comparator(elmnt, arr + parent * size_m) > 0){
-        memcpy(arr + i * size_m, arr + parent * size_m, size_m);
-        i = parent;
-        parent = PARENT(i);
+#define SWAPPOINTER(s, t)                                                      \
+    do {                                                                       \
+        void *aux = s;                                                         \
+        s = t;                                                                 \
+        t = aux;                                                               \
+    } while (0);
+
+
+
+Heap *heap_new(void **arr, int length, int size) {
+
+    Heap *heap = malloc(sizeof(Heap));
+
+    if (!heap)
+        return NULL;
+
+    heap->arr = arr;
+    heap->lenght = length;
+    heap->size = size;
+
+    return heap;
+}
+
+int heap_build(Heap *heap, ICOMPARATOR) {
+
+    if (heap->lenght < 2)
+        return 1;
+
+    int end_i = FATHER(heap->lenght - 1);
+
+    if (heap->lenght % 2 == 0) {
+        if (comparator(heap->arr[heap->lenght - 1], heap->arr[end_i]) > 0)
+            SWAPPOINTER(heap->arr[heap->lenght - 1], heap->arr[end_i]);
+        end_i--;
     }
-    
+
+    for (end_i; end_i >= 0; end_i--)
+        heapify_down(end_i, heap->arr, heap->lenght, comparator);
+
+    return 1;
+}
+
+int heap_is_empty(Heap *heap) { return heap->lenght == 0; }
+
+int heap_is_full(Heap *heap) { return heap->lenght == heap->size; }
+
+int heapify_up(int posi, void **arr, ICOMPARATOR) {
+
+    int i = posi, f = FATHER(i);
+
+    while (i > 0 && comparator(arr[i], arr[f]) > 0) {
+        SWAPPOINTER(arr[f], arr[i]);
+        i = f;
+        f = FATHER(i);
+    }
+
     return i;
 }
 
-size_t heapify_down(void *elmnt, size_t posi, void *arr, size_t length, size_t size_m, ICOMPARATOR){
-    size_t i = posi,
-        child_rigth,
-        child_obj;
+int heapify_down(int posi, void **arr, int length, ICOMPARATOR) {
 
-    while (i < length){
-        child_obj = LEFT(i),
-        child_rigth = RIGTH(i);
+    int i = posi, min_child = 0;
 
-        if (child_obj >= length)
+    while (CHILDLEFT(i) < length) {
+        min_child = comparator(arr[CHILDLEFT(i)], arr[CHILDRIGHT(i)]) >= 0
+                        ? CHILDLEFT(i)
+                        : CHILDRIGHT(i);
+
+        if (comparator(arr[min_child], arr[i]) <= 0)
             return i;
-        
-        if (child_rigth < length 
-            && !(comparator(arr + child_obj * size_m, arr + child_rigth * size_m) > 0))
-            child_obj = child_rigth;
+        else
+            SWAPPOINTER(arr[min_child], arr[i]);
 
-        if (comparator(elmnt, arr + child_obj * size_m) > 0)
-            return PARENT(child_obj);
-        
-        memcpy(arr + i * size_m, arr + child_obj * size_m, size_m);
-        i = child_obj;
-    }
-    
-    return PARENT(i);
-}
-
-int heap_build(void *arr, size_t length, size_t size_m, ICOMPARATOR){
-    if (length < 1 || size_m < 1)
-        return 0;
-
-    char *obj_aux = malloc(size_m);
-
-    if (!obj_aux)
-        return 0;
-
-    for (int i = length - 1, idx_swap; i >= 0; i--){
-        memcpy(obj_aux, arr + i * size_m, size_m);
-        //idx_swap = heapify_up(obj_aux, i, arr, length, size_m, comparator);
-        idx_swap = heapify_down(obj_aux, i, arr, length, size_m, comparator);
-
-        if (idx_swap != i)
-            memcpy(arr + idx_swap * size_m, obj_aux, size_m);
+        i = min_child;
     }
 
-    free(obj_aux);
-
-    return 1;
+    return FATHER(i);
 }
 
-int heap_insert(void *elmnt, void *arr, size_t length, size_t size_m, ICOMPARATOR){
+int heap_insert(Heap *heap, void *elmnt, ICOMPARATOR) {
 
-    if (length < 0 || size_m < 1)
-        return 0;
+    if (heap_is_full(heap) || !elmnt)
+        return -1;
 
-    size_t n_length = length + 1,
-            idx_add = heapify_up(elmnt, length, arr, n_length, size_m, comparator);
-    
-    memcpy(arr + idx_add * size_m, elmnt, size_m);
-    
-    return 1;
+    heap->arr[heap->lenght++] = elmnt;
+
+    return heapify_up(heap->lenght - 1, heap->arr, comparator);
 }
 
-void *heap_remove(void *arr,  size_t length, size_t size_m, ICOMPARATOR){
-    if (length < 1 || size_m < 1)
-        return 0;
+void *heap_remove(Heap *heap, ICOMPARATOR) {
 
-    char *obj_aux = malloc(size_m);
+    if (heap_is_empty(heap))
+        return NULL;
 
-    if (!obj_aux)
-        return 0;
+    void *elmnt = heap->arr[0];
+    heap->arr[0] = heap->arr[--heap->lenght];
+    heapify_down(0, heap->arr, heap->lenght, comparator);
 
-    memcpy(obj_aux, arr, size_m);
-    size_t n_length = length - 1,
-        idx_add = heapify_down(arr + n_length * size_m, 0, arr, n_length, size_m, comparator);
-
-    memcpy(arr + idx_add * size_m, arr + n_length * size_m, size_m);
-    memset(arr + n_length * size_m, 0, size_m);
-
-    return obj_aux;
+    return elmnt;
 }
 
-void *heap_peek(void *arr,  size_t length){
-    if (length == 0)
-        return 0;
+void *heap_peek(Heap *heap) {
 
-    return arr;
+    if (heap_is_empty(heap))
+        return NULL;
+
+    return heap->arr[0];
 }

@@ -32,7 +32,7 @@ Dado um arranjo de tamanho *n*, os elementos compreendidos no intervalo [(n / 2 
 
 <center>
   <figure> 
-    <img src="../.images/heap0.png" alt="Construção da Heap">
+    <img src="../../.github/images/heap0.png" alt="Construção da Heap">
     <figcaption>
       <i>Construção do Heap.</i>
     </figcaption>
@@ -47,7 +47,7 @@ A inserção é bem semelhante ao processo de construção, com a diferença de 
 
 <center>
   <figure>
-    <img src="../.images/heap1.png" alt="Inserção de um novo item na heap.">
+    <img src="../../.github/images/heap1.png" alt="Inserção de um novo item na heap.">
     <figcaption>
       <i>Inserção de um novo item com o valor "-7" no Heap.</i>
     </figcaption>
@@ -62,7 +62,7 @@ Em um heap o processo de remoção sempre retirará o elemento no topo da árvor
 
 <center>
   <figure>
-    <img src="../.images/heap3.png" alt="Diagrama de operações primitivas em uma pilha estática">
+    <img src="../../.github/images/heap3.png" alt="Diagrama de operações primitivas em uma pilha estática">
     <figcaption>
       <i>Remoção de um item do Heap.</i>
     </figcaption>
@@ -77,7 +77,7 @@ Visto que um Heap é baseado em uma árvore binária completa, sua altura é *(l
 - Build-Heap: *O(n)*;
 - Insert: *O(lg n)*;
 - Remove: *O(lg n)*;
-- Peek: *O(1)*;
+- Peek, IsEmpty, IsFull: *O(1)*;
 
 ## Aplicações
 - HeapSort;
