@@ -25,7 +25,8 @@ fenwick_tree_1d.o: $(SOURCEINCLUDE)/fenwick_tree_1d.h $(SOURCEPATH)/fenwick_tree
 	mv fenwick_tree_1d.o $(BUILDPATH)/
 
 main_fenwick_tree_1d: $(BUILDPATH) $(SOURCEPATH)/main_fenwick_tree_1d.c fenwick_tree_1d.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/fenwick_tree_1d.o $(SOURCEPATH)/main_fenwick_tree_1d.c -o main_fenwick_tree_1d
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/fenwick_tree_1d.o \
+		$(SOURCEPATH)/main_fenwick_tree_1d.c -o main_fenwick_tree_1d
 	mv main_fenwick_tree_1d $(BUILDPATH)/
 
 
@@ -36,5 +37,6 @@ fenwick_tree_2d.o: $(SOURCEINCLUDE)/fenwick_tree_2d.h $(SOURCEPATH)/fenwick_tree
 	mv fenwick_tree_2d.o $(BUILDPATH)/
 
 main_fenwick_tree_2d: $(BUILDPATH) $(SOURCEPATH)/main_fenwick_tree_2d.c fenwick_tree_2d.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/fenwick_tree_2d.o $(SOURCEPATH)/main_fenwick_tree_2d.c -o main_fenwick_tree_2d
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/fenwick_tree_2d.o \
+		$(SOURCEPATH)/main_fenwick_tree_2d.c -o main_fenwick_tree_2d
 	mv main_fenwick_tree_2d $(BUILDPATH)/
