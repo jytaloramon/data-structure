@@ -21,7 +21,7 @@ struct _CoordCartesian {
  * attr: shape - Arrays dimensions.
 */
 struct _FenwickStructure {
-    int **arr, **bitree_arr;
+    int *arr, *bitree_arr;
     struct _CoordCartesian shape;
 };
 
@@ -33,4 +33,4 @@ struct _FenwickStructure {
  * @param shape arrays dimensions.
  * @return A Fenwick instance or Null in case of error.
 */
-FenwickStructure *bitree_new(int **arr, int **bitree_arr, CoordCartesian shape);
+FenwickStructure *bitree_new(int *arr, int *bitree_arr, CoordCartesian shape);

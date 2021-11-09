@@ -1,29 +1,32 @@
 /**
  * @author Ytalo Ramon
  * @date   11/06/2021
-*/
+ */
 
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include "../include/segment_tree_1d_lazy.h"
 
-#define LEN 10       // Length array.
-#define SEGMULTI 4   // Multiplication factor between length array by length segtree array.
+#define LEN 10 // Length array.
+#define SEGMULTI                                                               \
+    4 // Multiplication factor between length array by length segtree array.
 
 #define INPUTSIZE 15 // Input size for test.
 
-enum option {
-    UPDATEBETWEEN,
-    SUMBETWEEN
-};
+enum option { UPDATEBETWEEN, SUMBETWEEN };
 
 void segtree_show(SegTree *seg_tree);
 
-int main(int argc, char const *argv[]){
+int main(int argc, char const *argv[]) {
 
     int test_cases[INPUTSIZE][4] = {
-        {SUMBETWEEN, 0, 5, 0,},
+        {
+            SUMBETWEEN,
+            0,
+            5,
+            0,
+        },
         {SUMBETWEEN, 3, 8, 0},
         {UPDATEBETWEEN, 0, LEN, 7},
         {SUMBETWEEN, 3, 4, 0},
@@ -39,21 +42,20 @@ int main(int argc, char const *argv[]){
         {SUMBETWEEN, LEN - 1, LEN, 0},
         {SUMBETWEEN, 0, LEN, 0},
     };
-    
+
     printf("+++++ SEGMENT TREE 1D LAZY +++++\n\n");
 
-    int op, v1, v2, v3, rs,
-        arr[LEN] = {1, 8, 9, 0, 5, 3, 2, 4, 6, 7},
-        arr_segt[LEN * SEGMULTI],
-        arr_lazy[LEN * SEGMULTI];
+    int op, v1, v2, v3, rs, arr[LEN] = {1, 8, 9, 0, 5, 3, 2, 4, 6, 7},
+                            arr_segt[LEN * SEGMULTI], arr_lazy[LEN * SEGMULTI];
 
     // Setting all arrayS positions to 0
     memset(arr_segt, 0, sizeof(int) * LEN * SEGMULTI);
     memset(arr_lazy, 0, sizeof(int) * LEN * SEGMULTI);
 
-    SegTree *seg_tree = segtree_new(arr, arr_segt, arr_lazy, (CoordCartesian1D){LEN});
+    SegTree *seg_tree =
+        segtree_new(arr, arr_segt, arr_lazy, (CoordCartesian1D){LEN});
 
-    if (!seg_tree){
+    if (!seg_tree) {
         printf("Memory allocation error!\n");
         exit(0);
     }
@@ -62,18 +64,22 @@ int main(int argc, char const *argv[]){
     segtree_show(seg_tree);
 
     // Test
-    for (int i = 0; i < INPUTSIZE; ++i){
-        op = test_cases[i][0]; v1 = test_cases[i][1];
-        v2 = test_cases[i][2]; v3 = test_cases[i][3];
+    for (int i = 0; i < INPUTSIZE; ++i) {
+        op = test_cases[i][0];
+        v1 = test_cases[i][1];
+        v2 = test_cases[i][2];
+        v3 = test_cases[i][3];
 
-        switch (op){
+        switch (op) {
         case SUMBETWEEN:
-            rs = segtree_sum_between(seg_tree, (CoordCartesian1D){v1}, (CoordCartesian1D){v2});
+            rs = segtree_sum_between(seg_tree, (CoordCartesian1D){v1},
+                                     (CoordCartesian1D){v2});
             printf(" * SUMBETWEEN [%d - %d]: %d\n\n", v1, v2 - 1, rs);
             break;
         case UPDATEBETWEEN:
             printf(" * UPDATEBETWEEN [%d - %d] => %d\n\n", v1, v2 - 1, v3);
-            segtree_update_between(seg_tree, v3, (CoordCartesian1D){v1}, (CoordCartesian1D){v2});
+            segtree_update_between(seg_tree, v3, (CoordCartesian1D){v1},
+                                   (CoordCartesian1D){v2});
             segtree_show(seg_tree);
         }
     }
@@ -84,15 +90,17 @@ int main(int argc, char const *argv[]){
     return 0;
 }
 
-void segtree_show(SegTree *seg_tree){
+void segtree_show(SegTree *seg_tree) {
 
     int i = 0, j = 0;
 
     printf("Arr: ");
     for (i = 0; i < seg_tree->shape.col; ++i)
         printf("%d, ", seg_tree->arr[i]);
-    
-    for (j = seg_tree->shape.col * SEGMULTI - 1; j >= 0 && seg_tree->arr_segt[j] == 0; --j);
+
+    for (j = seg_tree->shape.col * SEGMULTI - 1;
+         j >= 0 && seg_tree->arr_segt[j] == 0; --j)
+        ;
 
     printf("\nArr_lazy: ");
     for (i = 0; i < j + 1; ++i)

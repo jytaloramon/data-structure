@@ -47,17 +47,20 @@ int main(int argc, char const *argv[]) {
     segtree_show(seg_tree);
 
     // Tests
-    for (int i = 0; i < INPUTSIZE; ++i){
-        op = test_cases[i][0]; v1 = test_cases[i][1]; v2 = test_cases[i][2];
+    for (int i = 0; i < INPUTSIZE; ++i) {
+        op = test_cases[i][0];
+        v1 = test_cases[i][1];
+        v2 = test_cases[i][2];
 
-        switch (op){
+        switch (op) {
         case SUMBETWEEN:
             rs = segtree_sum_between(seg_tree, (CoordCartesian1D){v1},
-                (CoordCartesian1D){v2});
-            printf(" * SUMBETWEEN [%d - %d]:%d\n\n", v1, v2 - 1, rs); break;
+                                     (CoordCartesian1D){v2});
+            printf(" * SUMBETWEEN [%d - %d]:%d\n\n", v1, v2 - 1, rs);
+            break;
         case UPDATE:
-            printf(" * UPDATE [%d](%d) to (%d)\n\n", v1, seg_tree->arr[v1],
-            v2); segtree_update(seg_tree, v2, (CoordCartesian1D){v1});
+            printf(" * UPDATE [%d](%d) to (%d)\n\n", v1, seg_tree->arr[v1], v2);
+            segtree_update(seg_tree, v2, (CoordCartesian1D){v1});
             segtree_show(seg_tree);
         }
     }
@@ -77,7 +80,8 @@ void segtree_show(SegTree *seg_tree) {
         printf("%d, ", seg_tree->arr[i]);
 
     for (j = seg_tree->shape.col * SEGMULTI - 1;
-         j >= 0 && seg_tree->arr_segt[j] == 0; --j);
+         j >= 0 && seg_tree->arr_segt[j] == 0; --j)
+        ;
 
     printf("\nSegtree_arr: ");
     for (i = 0; i < j + 1; ++i)
