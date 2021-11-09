@@ -6,14 +6,12 @@
 #include "../../../includes/icomparator.h"
 #include "../../../includes/itree_array.h"
 
-
 typedef struct _Heap Heap;
 
 struct _Heap {
     void **arr;
     int lenght, size;
 };
-
 
 /**
  * Create a new Heap structure.
@@ -57,8 +55,7 @@ int heapify_up(int posi, void **arr, ICOMPARATOR);
 
 /**
  * Heapify top-down.
- *  @param posi Position of the reference element in the array, start of
- * heapify.
+ * @param posi Position of the reference element in the array, start of
  * @param arr heap, array of pointers to items.
  * @param length Length of array.
  * @param comparator Function comparator.

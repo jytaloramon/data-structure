@@ -19,11 +19,11 @@
   - [Ternary Search](./search/README.md#Ternary)
 
 ## [Trees](./tree/)
-  - [Binary Indexed (Fenwick) Tree - BIT](./tree/fewicktree/README.md#Binary)
+  - [Binary Indexed (Fenwick) Tree - BIT](./range-query/fewicktree/README.md#Binary)
     - Fenwick Tree 1D
     - Fenwick Tree 2D
   - [Heap](./tree/heap/README.md#Heap)
-  - [Segment Tree](./tree/segmenttree/README.md#Segment)
+  - [Segment Tree](./range-query/segment-tree/README.md#Segment)
     - SegTree 1D
     - SegTree 1D with Lazy Propagation (Optimization)
     - SegTree 2D

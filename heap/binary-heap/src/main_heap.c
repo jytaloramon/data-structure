@@ -3,10 +3,10 @@
  * @date   09/08/2021
  */
 
+#include "../include/heap.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "../include/heap.h"
 
 #define SIZE 15
 #define LENINIT 9
@@ -39,7 +39,7 @@ int main(int argc, char const *argv[]) {
 
     printf("+++++ HEAP +++++\n\n");
 
-    Heap *heap = heap_new(heap_array, LENINIT, SIZE);
+    Heap *heap = heap_new((void **)heap_array, LENINIT, SIZE);
 
     if (!heap) {
         printf("Memory allocation error!\n");

@@ -3,9 +3,8 @@
  * @date   09/08/2021
  */
 
-#include "stdlib.h"
 #include "../include/heap.h"
-
+#include "stdlib.h"
 
 #define SWAPPOINTER(s, t)                                                      \
     do {                                                                       \
@@ -13,8 +12,6 @@
         s = t;                                                                 \
         t = aux;                                                               \
     } while (0);
-
-
 
 Heap *heap_new(void **arr, int length, int size) {
 
@@ -35,16 +32,8 @@ int heap_build(Heap *heap, ICOMPARATOR) {
     if (heap->lenght < 2)
         return 1;
 
-    int end_i = FATHER(heap->lenght - 1);
-
-    if (heap->lenght % 2 == 0) {
-        if (comparator(heap->arr[heap->lenght - 1], heap->arr[end_i]) > 0)
-            SWAPPOINTER(heap->arr[heap->lenght - 1], heap->arr[end_i]);
-        end_i--;
-    }
-
-    for (end_i; end_i >= 0; end_i--)
-        heapify_down(end_i, heap->arr, heap->lenght, comparator);
+    for (int i = FATHER(heap->lenght - 1); i >= 0; i--)
+        heapify_down(i, heap->arr, heap->lenght, comparator);
 
     return 1;
 }
@@ -68,19 +57,22 @@ int heapify_up(int posi, void **arr, ICOMPARATOR) {
 
 int heapify_down(int posi, void **arr, int length, ICOMPARATOR) {
 
-    int i = posi, min_child = 0;
+    int i = posi, idx_min_child = 0;
 
     while (CHILDLEFT(i) < length) {
-        min_child = comparator(arr[CHILDLEFT(i)], arr[CHILDRIGHT(i)]) >= 0
-                        ? CHILDLEFT(i)
-                        : CHILDRIGHT(i);
+        idx_min_child = CHILDLEFT(i);
 
-        if (comparator(arr[min_child], arr[i]) <= 0)
+        if (CHILDRIGHT(i) < length) {
+            idx_min_child = comparator(arr[CHILDLEFT(i)], arr[CHILDRIGHT(i)]) >= 0
+                            ? CHILDLEFT(i)
+                            : CHILDRIGHT(i);
+        }
+
+        if (comparator(arr[idx_min_child], arr[i]) <= 0)
             return i;
-        else
-            SWAPPOINTER(arr[min_child], arr[i]);
-
-        i = min_child;
+       
+        SWAPPOINTER(arr[idx_min_child], arr[i]);
+        i = idx_min_child;
     }
 
     return FATHER(i);
