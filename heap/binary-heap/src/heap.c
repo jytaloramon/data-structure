@@ -3,8 +3,8 @@
  * @date   09/08/2021
  */
 
-#include "../include/heap.h"
 #include "stdlib.h"
+#include "../include/heap.h"
 
 #define SWAPPOINTER(s, t)                                                      \
     do {                                                                       \
@@ -13,7 +13,7 @@
         t = aux;                                                               \
     } while (0);
 
-Heap *heap_new(void **arr, int length, int size) {
+Heap *heap_new(ItemHeap **arr, int length, int size) {
 
     Heap *heap = malloc(sizeof(Heap));
 
@@ -42,11 +42,11 @@ int heap_is_empty(Heap *heap) { return heap->lenght == 0; }
 
 int heap_is_full(Heap *heap) { return heap->lenght == heap->size; }
 
-int heapify_up(int posi, void **arr, ICOMPARATOR) {
+int heapify_up(int posi, ItemHeap **arr, ICOMPARATOR) {
 
     int i = posi, f = FATHER(i);
 
-    while (i > 0 && comparator(arr[i], arr[f]) > 0) {
+    while (i > 0 && comparator(arr[i]->key, arr[f]->key) > 0) {
         SWAPPOINTER(arr[f], arr[i]);
         i = f;
         f = FATHER(i);
@@ -55,22 +55,22 @@ int heapify_up(int posi, void **arr, ICOMPARATOR) {
     return i;
 }
 
-int heapify_down(int posi, void **arr, int length, ICOMPARATOR) {
+int heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR) {
 
     int i = posi, idx_min_child = 0;
 
-    while (CHILDLEFT(i) < length) {
-        idx_min_child = CHILDLEFT(i);
+    while ((idx_min_child = CHILDLEFT(i)) < length) {
 
         if (CHILDRIGHT(i) < length) {
-            idx_min_child = comparator(arr[CHILDLEFT(i)], arr[CHILDRIGHT(i)]) >= 0
-                            ? CHILDLEFT(i)
-                            : CHILDRIGHT(i);
+            idx_min_child =
+                comparator(arr[CHILDLEFT(i)]->key, arr[CHILDRIGHT(i)]->key) >= 0
+                    ? CHILDLEFT(i)
+                    : CHILDRIGHT(i);
         }
 
-        if (comparator(arr[idx_min_child], arr[i]) <= 0)
+        if (comparator(arr[idx_min_child]->key, arr[i]->key) <= 0)
             return i;
-       
+
         SWAPPOINTER(arr[idx_min_child], arr[i]);
         i = idx_min_child;
     }
@@ -78,17 +78,17 @@ int heapify_down(int posi, void **arr, int length, ICOMPARATOR) {
     return FATHER(i);
 }
 
-int heap_insert(Heap *heap, void *elmnt, ICOMPARATOR) {
+int heap_insert(Heap *heap, ItemHeap *item, ICOMPARATOR) {
 
-    if (heap_is_full(heap) || !elmnt)
+    if (heap_is_full(heap) || !item)
         return -1;
 
-    heap->arr[heap->lenght++] = elmnt;
+    heap->arr[heap->lenght++] = item;
 
     return heapify_up(heap->lenght - 1, heap->arr, comparator);
 }
 
-void *heap_remove(Heap *heap, ICOMPARATOR) {
+ItemHeap *heap_remove(Heap *heap, ICOMPARATOR) {
 
     if (heap_is_empty(heap))
         return NULL;
@@ -100,7 +100,7 @@ void *heap_remove(Heap *heap, ICOMPARATOR) {
     return elmnt;
 }
 
-void *heap_peek(Heap *heap) {
+ItemHeap *heap_peek(Heap *heap) {
 
     if (heap_is_empty(heap))
         return NULL;
