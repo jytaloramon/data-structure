@@ -1,4 +1,4 @@
-# Binary Indexed (Fenwick) Tree - BIT (Árvore Binária Indexada)
+# Binary Indexed (Fenwick) Tree - BIT <:> Árvore Binária Indexada
 
 ## Fenwick Tree (1D)
 [Código Fonte](src/main_fenwick_tree_1d.c)
