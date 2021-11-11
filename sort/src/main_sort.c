@@ -4,6 +4,7 @@
  */
 
 #include "../include/bubble_sort.h"
+#include "../include/merge_sort.h"
 #include "../include/quick_sort.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -26,8 +27,11 @@ int main(int argc, char const *argv[]) {
     // printf("@@ BUBBLE SORT\n");
     // bubble_sort(arr, 9, sizeof(int), comp);
 
-    printf("@@ QUICK SORT\n");
-    quick_sort(arr, SIZE, sizeof(int), comp);
+    printf("@@ MERGE SORT\n");
+    merge_sort(arr, SIZE, sizeof(int), comp);
+
+    // printf("@@ QUICK SORT\n");
+    // quick_sort(arr, SIZE, sizeof(int), comp);
 
     printf("Final: ");
     arr_int_show(arr, SIZE);
