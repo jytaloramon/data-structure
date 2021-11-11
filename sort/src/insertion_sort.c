@@ -13,7 +13,7 @@ void insertion_sort(void *arr, size_t n_member, size_t size_m, ICOMPARATOR) {
 
     for (size_t i = 1, j = 0; i < n_member; ++i) {
         memcpy(temp, arr_c + SHIFTBYTEIDXSIZEM(i, size_m), size_m);
-        
+
         j = i;
         while (j > 0 &&
                comparator(arr_c + SHIFTBYTEIDXSIZEM(j - 1, size_m), temp) > 0) {

@@ -8,7 +8,7 @@
 #define CALMIDDLE(v) ((v) / 2)
 
 /**
- * Sort array with classification Bubble Sort.
+ * Sort array with classification Merge Sort.
  * @param arr source array.
  * @param n_member member number.
  * @param size_m size of each member.

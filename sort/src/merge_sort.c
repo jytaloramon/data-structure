@@ -50,4 +50,6 @@ void merge_partition(void *arr, size_t n_member, size_t size_m, ICOMPARATOR) {
         memcpy(arr_c + SHIFTBYTEIDXSIZEM(k, size_m),
                arr_a + SHIFTBYTEIDXSIZEM(k, size_m), size_m);
     }
+
+    free(arr_a);
 }
