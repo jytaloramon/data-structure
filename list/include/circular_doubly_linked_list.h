@@ -1,6 +1,6 @@
 /**
  * @author Ytalo Ramon
- * @date   15/06/2021
+ * @date   16/11/2021
  */
 
 #include "list.h"
@@ -40,20 +40,4 @@ List *list_new();
  */
 ItemList *list_new_item(void *data);
 
-/**
- * Adds an element at the specified position.
- * @param list List pointer.
- * @param posi Insertion position.
- * @param elmnt Element.
- * @return Or 1 if added or 0 if not added.
- */
-int list_insert_after_item(ItemList *item, void *elmnt);
 
-/**
- * Remove the element at the specified position.
- * @param list List pointer.
- * @param posi Position of the removed element. Value -1 to remove the last
- * element.
- * @return The instance removed or NULL if list is empty.
- */
-void *list_remove_item(ItemList *item);
