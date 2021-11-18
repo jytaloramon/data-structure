@@ -1,25 +1,25 @@
 /**
  * @author Ytalo Ramon
  * @date   15/06/2021
-*/
+ */
 
-#include "stdio.h"
-#include "string.h"
 #include "../include/static_list.h"
 #include "../../math/include/arithmetic.h"
+#include "stdio.h"
+#include "string.h"
 
-List *list_new(int size){
+List *list_new(int size) {
 
     List *list = malloc(sizeof(List));
 
     if (!list)
         return NULL;
 
-    list->size    = size + 1;
+    list->size = size + 1;
     list->p_front = list->p_rear = list->length = 0;
-    list->items   = malloc(sizeof(ItemList) * list->size);
+    list->items = malloc(sizeof(ItemList) * list->size);
 
-    if (!list->items){
+    if (!list->items) {
         free(list);
         return NULL;
     }
@@ -27,18 +27,15 @@ List *list_new(int size){
     return list;
 }
 
-int list_is_empty(List *list){
+int list_is_empty(List *list) { return list->p_front == list->p_rear; }
 
-    return list->p_front == list->p_rear;
-}
-
-int list_is_full(List *list){
+int list_is_full(List *list) {
 
     return divmodular(list->p_rear + 1, list->size) == list->p_front;
 }
 
-int list_append(List *list, void *elmnt){
-    
+int list_append(List *list, void *elmnt) {
+
     if (list_is_full(list))
         return 0;
 
@@ -49,7 +46,7 @@ int list_append(List *list, void *elmnt){
     return 1;
 }
 
-int list_insert_at(List *list, int posi, void *elmnt){
+int list_insert_at(List *list, int posi, void *elmnt) {
 
     if (list_is_full(list) || posi < 0 || posi > list->length)
         return 0;
@@ -59,13 +56,14 @@ int list_insert_at(List *list, int posi, void *elmnt){
 
     int posi_insert = 0;
 
-    if (posi == 0){
+    if (posi == 0) {
         posi_insert = divmodular(list->p_front - 1, list->size);
         list->p_front = posi_insert;
     } else {
         posi_insert = divmodular(list->p_front + posi, list->size);
-        
-        for (int idx = list->p_rear; idx != posi_insert; idx = divmodular(idx - 1, list->size))
+
+        for (int idx = list->p_rear; idx != posi_insert;
+             idx = divmodular(idx - 1, list->size))
             list->items[idx].data = list->items[idx - 1].data;
 
         list->p_rear = divmodular(list->p_rear + 1, list->size);
@@ -77,7 +75,7 @@ int list_insert_at(List *list, int posi, void *elmnt){
     return 1;
 }
 
-void *list_remove_first(List *list){
+void *list_remove_first(List *list) {
 
     if (list_is_empty(list))
         return NULL;
@@ -90,22 +88,24 @@ void *list_remove_first(List *list){
     return data;
 }
 
-void *list_remove_at(List *list, int posi){
+void *list_remove_at(List *list, int posi) {
 
     if (list_is_empty(list) || (posi < 0 && posi != -1) || posi >= list->length)
         return NULL;
 
     if (posi == 0)
         return list_remove_first(list);
-    
-    int posi_remove = divmodular(list->p_front + (posi != -1 ? posi : list->length - 1),
-                                    list->size);
+
+    int posi_remove = divmodular(
+        list->p_front + (posi != -1 ? posi : list->length - 1), list->size);
     void *data = list->items[posi_remove].data;
 
     int end_loop = divmodular(list->p_rear - 1, list->size);
-    for (int idx = posi_remove; idx != end_loop; idx = divmodular(idx + 1, list->size))
-        list->items[idx].data = list->items[divmodular(idx + 1, list->size)].data;
-    
+    for (int idx = posi_remove; idx != end_loop;
+         idx = divmodular(idx + 1, list->size))
+        list->items[idx].data =
+            list->items[divmodular(idx + 1, list->size)].data;
+
     list->p_rear = divmodular(list->p_rear - 1, list->size);
     list->items[list->p_rear].data = NULL;
     list->length--;
@@ -113,9 +113,10 @@ void *list_remove_at(List *list, int posi){
     return data;
 }
 
-void list_clear(List *list){
+void list_clear(List *list) {
 
-    for (int i = list->p_front; !list_is_empty(list); i = divmodular(i + 1, list->size)){
+    for (int i = list->p_front; !list_is_empty(list);
+         i = divmodular(i + 1, list->size)) {
         free(list->items[i].data);
         list->items[i].data = NULL;
     }
@@ -123,7 +124,7 @@ void list_clear(List *list){
     list->p_front = list->p_rear = list->length = 0;
 }
 
-int list_index_of(List *list, void *value, ICOMPARATOR){
+int list_index_of(List *list, void *value, ICOMPARATOR) {
 
     int i = list->p_front;
 
@@ -133,20 +134,24 @@ int list_index_of(List *list, void *value, ICOMPARATOR){
     if (i == list->p_rear)
         return -1;
 
-    return i >= list->p_front ? i - list->p_front : list->size - list->p_front + i;
+    return i >= list->p_front ? i - list->p_front
+                              : list->size - list->p_front + i;
 }
 
-void *list_find(List *list, void *value, ICOMPARATOR){
+void *list_find(List *list, void *value, ICOMPARATOR) {
 
     int posi = list_index_of(list, value, comparator);
-    return posi != -1 ? list->items[divmodular(list->p_front + posi, list->size)].data : NULL;
+    return posi != -1
+               ? list->items[divmodular(list->p_front + posi, list->size)].data
+               : NULL;
 }
 
-int list_count(List *list, void *value, ICOMPARATOR){
-    
+int list_count(List *list, void *value, ICOMPARATOR) {
+
     int count = 0;
 
-    for (int i = list->p_front; i != list->p_rear; i = divmodular(i + 1, list->size))
+    for (int i = list->p_front; i != list->p_rear;
+         i = divmodular(i + 1, list->size))
         if (!comparator(value, list->items[i].data))
             count++;
 

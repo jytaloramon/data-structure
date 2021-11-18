@@ -47,7 +47,7 @@ void *list_remove(List *list);
 void list_clear(List *list);
 
 /**
- * Returns the first element with the specified value.
+ * Returns the first ItemList with the specified value.
  * @param list List pointer.
  * @param value Value sought.
  * @param comparator Comparison function.
@@ -56,10 +56,10 @@ void list_clear(List *list);
 ItemList *list_find(List *list, void *value, ICOMPARATOR);
 
 /**
- * Returns the number of elements with the specified value.
+ * Returns the number of ItemList with the specified value.
  * @param list List pointer.
  * @param value Value sought.
  * @param comparator Comparison function.
  * @return Number of elements that satisfy the conditions.
  */
-int list_count(List *list, void *value, ICOMPARATOR);
+size_t list_count(List *list, void *value, ICOMPARATOR);

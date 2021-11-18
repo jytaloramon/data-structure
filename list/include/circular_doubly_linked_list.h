@@ -3,7 +3,7 @@
  * @date   16/11/2021
  */
 
-#include "list.h"
+#include "doubly_linked_list_base.h"
 
 /**
  * struct _ItemList.
@@ -19,25 +19,18 @@ struct _ItemList {
 /**
  * struct _List.
  * attr: length - Number of elements currently present in the lists.
- * attr: front - Pointer to the first element in the list..
- * attr: rear - Pointer to the last element in the list.
+ * attr: front - Pointer to the first element in the list.
  */
 struct _List {
     int length;
-    struct _ItemList front, *rear;
+    struct _ItemList head;
 };
 
 /**
- * Create a new list.
- * @return A list instance or Null in case of error.
+ * Returns the offset bettween itemBase and Item with the specified value.
+ * @param item_base Reference item.
+ * @param value Value sought.
+ * @param comparator Comparison function.
+ * @return Object offset if found, or -1 if not.
  */
-List *list_new();
-
-/**
- * Create a new ItemList.
- * @param data Void pointer.
- * @return The instance of a new ItemList.
- */
-ItemList *list_new_item(void *data);
-
-
+int list_index_of_item_base(ItemList *item_base, void *value, ICOMPARATOR);

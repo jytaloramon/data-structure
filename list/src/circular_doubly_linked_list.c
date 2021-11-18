@@ -3,7 +3,7 @@
  * @date   16/11/2021
  */
 
-#include "../include/doubly_linked_list.h"
+#include "../include/circular_doubly_linked_list.h"
 #include "stdio.h"
 #include "string.h"
 
@@ -14,14 +14,14 @@ List *list_new() {
     if (!list)
         return NULL;
 
-    list->front.previous = list->front.next = NULL;
-    list->rear = &list->front;
+    list->head.previous = list->head.next = NULL;
     list->length = 0;
 
     return list;
 }
 
 ItemList *list_new_item(void *data) {
+
     ItemList *item = malloc(sizeof(ItemList));
 
     if (!item)
@@ -33,27 +33,25 @@ ItemList *list_new_item(void *data) {
     return item;
 }
 
-int list_is_empty(List *list) { return list->front.next == NULL; }
+int list_is_empty(List *list) { return list->head.next == NULL; }
 
 int list_append(List *list, void *elmnt) {
 
-    if (!list_is_empty(list)) {
-        list->length++;
-        return list_insert_after_item(list->front.next->previous, elmnt);
-    }
+    if (!list_is_empty(list))
+        return list_insert_after_item(list, list->head.next->previous, elmnt);
 
     ItemList *new_item = list_new_item(elmnt);
     if (!new_item)
         return 0;
 
     new_item->previous = new_item->next = new_item;
-    list->front.next = new_item;
+    list->head.next = new_item;
     list->length++;
 
     return 1;
 }
 
-int list_insert_after_item(ItemList *item, void *elmnt) {
+int list_insert_after_item(List *list, ItemList *item, void *elmnt) {
 
     if (!item)
         return 0;
@@ -67,6 +65,7 @@ int list_insert_after_item(ItemList *item, void *elmnt) {
     new_item->next = item->next;
     item->next->previous = new_item;
     item->next = new_item;
+    list->length++;
 
     return 1;
 }
@@ -76,42 +75,94 @@ void *list_remove(List *list) {
     if (list_is_empty(list))
         return NULL;
 
-    if (list->length > 1) {
-    }
-    return list_remove_item(list->front.next);
-
-    ItemList *item = list->front.next;
-    void *data = item->data;
-
-    list->front.next = item->next;
-    list->length--;
-    free(item);
-
-    if (!list_is_empty(list))
-        list->front.next->previous = NULL;
-    else
-        list->rear = &list->front;
-
-    return data;
+    return list_remove_item(list, list->head.next);
 }
 
-void *list_remove_item(ItemList *item) {
+void *list_remove_item(List *list, ItemList *item) {
 
-    if (!item || item->previous == item)
+    if (!item)
         return NULL;
 
     void *data = item->data;
 
-    item->previous->next = item->next;
-    item->next->previous = item->previous;
+    if (item == item->previous) {
+        list->head.next = NULL;
+    } else {
+        item->previous->next = item->next;
+        item->next->previous = item->previous;
+
+        if (list->head.next == item)
+            list->head.next = item->next;
+    }
 
     free(item);
+    list->length--;
 
     return data;
 }
 
-void list_clear(List *list);
+void list_clear(List *list) {
 
-ItemList *list_find(List *list, void *value, ICOMPARATOR);
+    ItemList *item = list->head.next;
 
-int list_count(List *list, void *value, ICOMPARATOR);
+    while (!list_is_empty(list)) {
+        list_remove_item(list, item);
+        item = list->head.next;
+    }
+}
+
+ItemList *list_find(List *list, void *value, ICOMPARATOR) {
+
+    if (list_is_empty(list))
+        return NULL;
+
+    ItemList *item = list->head.next;
+
+    if (!comparator(item->data, value))
+        return item;
+
+    int rs = 1;
+    item = item->next;
+
+    while (item != list->head.next && (rs = comparator(item->data, value))) {
+        item = item->next;
+    }
+
+    return !rs ? item : NULL;
+}
+
+size_t list_count(List *list, void *value, ICOMPARATOR) {
+
+    if (list_is_empty(list))
+        return NULL;
+
+    ItemList *item = list->head.next->next;
+    int count = !comparator(list->head.next->data, value);
+
+    while (item != list->head.next) {
+        count += !comparator(item->data, value);
+        item = item->next;
+    }
+
+    return count;
+}
+
+int list_index_of_item_base(ItemList *item_base, void *value, ICOMPARATOR) {
+
+    if (!item_base)
+        return -1;
+
+    if (!comparator(item_base->data, value))
+        return 0;
+
+    int offset = 1;
+
+    for (ItemList *item_r = item_base->next; item_r != item_base;
+         item_r = item_r->next, offset++) {
+
+        if (!comparator(item_base->data, value))
+            return offset;
+    }
+
+    return -1;
+}
