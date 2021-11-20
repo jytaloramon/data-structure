@@ -8,14 +8,14 @@
 #include "string.h"
 
 List *list_new() {
-    
+
     List *list = malloc(sizeof(List));
 
     if (!list)
         return NULL;
 
-    list->front.previous = list->front.next = NULL;
-    list->rear = &list->front;
+    list->head.previous = list->head.next = NULL;
+    list->rear = &list->head;
     list->length = 0;
 
     return list;
@@ -34,7 +34,7 @@ ItemList *list_new_item(void *data) {
     return item;
 }
 
-int list_is_empty(List *list) { return list->front.next == NULL; }
+int list_is_empty(List *list) { return list->head.next == NULL; }
 
 int list_append(List *list, void *elmnt) {
 
@@ -53,105 +53,100 @@ int list_append(List *list, void *elmnt) {
     return 1;
 }
 
-int list_insert_at(List *list, int posi, void *elmnt) {
+int list_insert_at(List *list, int index, void *elmnt) {
 
-    if (posi < 0 || posi > list->length)
+    if (index < 0 || index > list->length)
         return 0;
 
-    if (posi == list->length)
+    if (index == list->length)
         return list_append(list, elmnt);
 
-    ItemList *item = list_new_item(elmnt);
+    ItemList *item_r = &list->head;
+    for (size_t i = 0; i < index; ++i, item_r = item_r->next);
+
+    int rs = list_insert_after_item(list, item_r, elmnt);
+
+    if (rs && index == 0)
+        list->head.next->previous = NULL;
+
+    return rs;
+}
+
+int list_insert_after_item(List *list, ItemList *item, void *elmnt) {
 
     if (!item)
         return 0;
 
-    int middle = list->length / 2;
-    ItemList *item_r = NULL;
+    ItemList *new_item = list_new_item(elmnt);
 
-    if (posi <= middle) {
-        item_r = &list->front;
-        for (int i = 0; i < posi; ++i, item_r = item_r->next)
-            ;
-    } else {
-        item_r = list->rear;
-        for (int i = 0; i < list->length - posi; ++i, item_r = item_r->previous)
-            ;
-    }
+    if (!new_item)
+        return 0;
 
-    item->previous = item_r->next->previous;
-    item_r->next->previous = item;
-    item->next = item_r->next;
-    item_r->next = item;
+    new_item->previous = item;
+    new_item->next = item->next;
+    item->next->previous = new_item;
+    item->next = new_item;
     list->length++;
 
     return 1;
 }
 
-void *list_remove_first(List *list) {
+void *list_remove(List *list) {
 
     if (list_is_empty(list))
         return NULL;
 
-    ItemList *item = list->front.next;
-    void *data = item->data;
-
-    list->front.next = item->next;
-    list->length--;
-    free(item);
-
-    if (!list_is_empty(list))
-        list->front.next->previous = NULL;
-    else
-        list->rear = &list->front;
-
-    return data;
+    return list_remove_item(list, list->head.next);
 }
 
-void *list_remove_at(List *list, int posi) {
+void *list_remove_at(List *list, int index) {
 
-    if (list_is_empty(list) || (posi < 0 && posi != -1) || posi >= list->length)
+    if (list_is_empty(list) || (index < 0 && index != -1) ||
+        index >= list->length)
         return NULL;
 
-    if (posi == 0)
-        return list_remove_first(list);
+    if (index == 0)
+        return list_remove(list);
 
-    if (posi == -1)
-        posi = list->length - 1;
+    if (index == -1)
+        index = list->length - 1;
 
-    int middle = list->length / 2;
-    ItemList *item_r = NULL;
+    ItemList *item_r = list->head.next->next;
+    for (size_t i = 1; i < index; ++i, item_r = item_r->next);
 
-    if (posi <= middle) {
-        item_r = &list->front;
-        for (int i = 0; i < posi; ++i, item_r = item_r->next)
-            ;
+    return list_remove_item(list, item_r);
+}
+
+void *list_remove_item(List *list, ItemList *item) {
+
+    if (!item)
+        return NULL;
+
+    void *data = item->data;
+    ItemList *previous_final = NULL;
+
+    if (!item->previous) {
+        // if the item is the first element.
+        list->head.next = item->next;
     } else {
-        item_r = list->rear;
-        for (int i = 0; i < list->length - posi; ++i, item_r = item_r->previous)
-            ;
+        item->previous->next = item->next;
+        previous_final = item->previous;
     }
 
-    ItemList *item = item_r->next;
-    void *data = item->data;
-    item_r->next = item->next;
-    list->length--;
-
-    if (list_is_empty(list))
-        list->rear = &list->front;
-    else if (item->next)
-        item->next->previous = item->previous;
+    if (item->next) // if the item is not the last element.
+        item->next->previous = previous_final;
     else
-        list->rear = item->previous;
+        list->rear = previous_final ? previous_final : &list->head;
 
     free(item);
+    list->length--;
 
     return data;
 }
 
 void list_clear(List *list) {
 
-    for (ItemList *item_r = &list->front, *item_n = NULL; !list_is_empty(list);
+    for (ItemList *item_r = &list->head, *item_n = NULL; !list_is_empty(list);
          item_r->next = item_n) {
 
         item_n = item_r->next->next;
@@ -159,15 +154,15 @@ void list_clear(List *list) {
         free(item_r->next);
     }
 
-    list->rear = &list->front;
+    list->rear = &list->head;
 }
 
 int list_index_of(List *list, void *value, ICOMPARATOR) {
 
     int i = 0;
-    ItemList *item_r = list->front.next;
+    ItemList *item_r = list->head.next;
 
-    while (item_r && comparator(value, item_r->data)) {
+    while (item_r && comparator(item_r->data, value)) {
         item_r = item_r->next;
         i++;
     }
@@ -175,24 +170,25 @@ int list_index_of(List *list, void *value, ICOMPARATOR) {
     return item_r ? i : -1;
 }
 
-void *list_find(List *list, void *value, ICOMPARATOR) {
+ItemList *list_find(List *list, void *value, ICOMPARATOR) {
 
-    ItemList *item_r = list->front.next;
+    ItemList *item_r = list->head.next;
 
-    while (item_r && comparator(value, item_r->data))
+    while (item_r && comparator(item_r->data, value))
         item_r = item_r->next;
 
-    return item_r ? item_r->data : NULL;
+    return item_r ? item_r : NULL;
 }
 
-int list_count(List *list, void *value, ICOMPARATOR) {
+size_t list_count(List *list, void *value, ICOMPARATOR) {
 
-    int count = 0;
-    ItemList *item_r = list->front.next;
+    size_t count = 0;
+    ItemList *item_r = list->head.next;
 
     while (item_r) {
         if (!comparator(value, item_r->data))
             count++;
+
         item_r = item_r->next;
     }
 

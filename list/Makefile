@@ -31,6 +31,7 @@ static_list.o: $(BUILDPATH) $(SOURCEINCLUDE)/static_list.h $(SOURCEPATH)/static_
 main_static_list: $(BUILDPATH) static_list.o arithmetic.o $(SOURCEPATH)/main_static_list.c
 	$(COMPILER) $(FLAGS) $(BUILDPATH)/static_list.o $(BUILDPATH)/arithmetic.o $(SOURCEPATH)/main_static_list.c -o main_static_list
 	mv main_static_list $(BUILDPATH)/
+	
 
 # Doubly Linked List
 
@@ -43,3 +44,12 @@ main_doubly_linked_list: $(BUILDPATH) doubly_linked_list.o $(SOURCEPATH)/main_do
 	mv main_doubly_linked_list $(BUILDPATH)/
 
 
+# Circular Doubly Linked List
+
+circular_doubly_linked_list.o: $(BUILDPATH) $(SOURCEINCLUDE)/circular_doubly_linked_list.h $(SOURCEPATH)/circular_doubly_linked_list.c
+	$(COMPILER) $(FLAGS) $(SOURCEPATH)/circular_doubly_linked_list.c -c
+	mv circular_doubly_linked_list.o $(BUILDPATH)/
+
+main_circular_doubly_linked_list: $(BUILDPATH) circular_doubly_linked_list.o $(SOURCEPATH)/main_circular_doubly_linked_list.c
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/circular_doubly_linked_list.o $(SOURCEPATH)/main_circular_doubly_linked_list.c -o main_circular_doubly_linked_list
+	mv main_circular_doubly_linked_list $(BUILDPATH)/
