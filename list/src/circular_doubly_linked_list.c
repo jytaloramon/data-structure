@@ -103,11 +103,17 @@ void *list_remove_item(List *list, ItemList *item) {
 
 void list_clear(List *list) {
 
-    ItemList *item = list->head.next;
+    if (list_is_empty(list))
+        return;
 
-    while (!list_is_empty(list)) {
-        list_remove_item(list, item);
-        item = list->head.next;
+    list->head.next->previous->next = NULL;
+
+    for (ItemList *item_r = &list->head, *item_n = NULL; !list_is_empty(list);
+         item_r->next = item_n) {
+
+        item_n = item_r->next->next;
+        free(item_r->next->data);
+        free(item_r->next);
     }
 }
 
@@ -134,7 +140,7 @@ ItemList *list_find(List *list, void *value, ICOMPARATOR) {
 size_t list_count(List *list, void *value, ICOMPARATOR) {
 
     if (list_is_empty(list))
-        return NULL;
+        return 0;
 
     ItemList *item = list->head.next->next;
     int count = !comparator(list->head.next->data, value);
@@ -145,24 +151,4 @@ size_t list_count(List *list, void *value, ICOMPARATOR) {
     }
 
     return count;
-}
-
-int list_index_of_item_base(ItemList *item_base, void *value, ICOMPARATOR) {
-
-    if (!item_base)
-        return -1;
-
-    if (!comparator(item_base->data, value))
-        return 0;
-
-    int offset = 1;
-
-    for (ItemList *item_r = item_base->next; item_r != item_base;
-         item_r = item_r->next, offset++) {
-
-        if (!comparator(item_base->data, value))
-            return offset;
-    }
-
-    return -1;
 }

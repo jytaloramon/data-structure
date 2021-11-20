@@ -8,20 +8,20 @@
 /**
  * Adds an element at the specified position.
  * @param list List pointer.
- * @param posi Insertion position.
+ * @param index Insertion position.
  * @param elmnt Element.
  * @return Or 1 if added or 0 if not added.
  */
-int list_insert_at(List *list, int posi, void *elmnt);
+int list_insert_at(List *list, int index, void *elmnt);
 
 /**
  * Remove the element at the specified position.
  * @param list List pointer.
- * @param posi Position of the removed element. Value -1 to remove the last
+ * @param index Position of the removed element. Value -1 to remove the last
  * element.
  * @return The instance removed or NULL if list is empty.
  */
-void *list_remove_at(List *list, int posi);
+void *list_remove_at(List *list, int index);
 
 /**
  * Returns the index of the first element with the specified value.

@@ -1,18 +1,17 @@
 /**
  * @author Ytalo Ramon
  * @date   15/06/2021
-*/
+ */
 
-#include "list_linked.h"
+#include "list_linear.h"
 
 /**
  * struct _ItemList.
  * attr: data - Payload.
-*/
-struct _ItemList{
+ */
+struct _ItemList {
     void *data;
 };
-
 
 /**
  * struct _List.
@@ -21,22 +20,31 @@ struct _ItemList{
  * attr: size - List size.
  * attr: length - Number of elements currently present in the lists.
  * attr: items - array of elements.
-*/
-struct _List{
+ */
+struct _List {
     int p_front, p_rear, size, length;
-    struct _ItemList *items; 
+    struct _ItemList *items;
 };
 
 /**
  * Create a new list.
  * @param size List size.
  * @return A list instance or Null in case of error.
-*/
+ */
 List *list_new(int size);
 
 /**
  * Checks if the queue is full.
  * @param queue Queue pointer.
  * @return Or 1 if full or 0 if not full.
-*/
+ */
 int list_is_full(List *list);
+
+/**
+ * Returns the first element with the specified value.
+ * @param list List pointer.
+ * @param value Value sought.
+ * @param comparator Comparison function.
+ * @return The object if found, or NULL if not.
+ */
+void *list_find(List *list, void *value, ICOMPARATOR);

@@ -4,6 +4,7 @@
  */
 
 #include "doubly_linked_list_base.h"
+#include "list_linear.h"
 
 /**
  * struct _List.
@@ -13,5 +14,5 @@
  */
 struct _List {
     int length;
-    struct _ItemList front, *rear;
+    struct _ItemList head, *rear;
 };

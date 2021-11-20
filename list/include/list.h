@@ -47,15 +47,6 @@ void *list_remove(List *list);
 void list_clear(List *list);
 
 /**
- * Returns the first ItemList with the specified value.
- * @param list List pointer.
- * @param value Value sought.
- * @param comparator Comparison function.
- * @return The object if found, or NULL if not.
- */
-ItemList *list_find(List *list, void *value, ICOMPARATOR);
-
-/**
  * Returns the number of ItemList with the specified value.
  * @param list List pointer.
  * @param value Value sought.
