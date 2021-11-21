@@ -152,3 +152,32 @@ size_t list_count(List *list, void *value, ICOMPARATOR) {
 
     return count;
 }
+
+int list_extend(List *list, List *list_src) {
+
+    if (!list || !list_src || list_is_empty(list) || list_is_empty(list_src))
+        return 0;
+
+    list_src->head.next->previous->next = NULL;
+    ItemList *item_rollback = list->head.next->previous;
+    int erro_create = 0;
+
+    for (ItemList *item_r = list_src->head.next; !erro_create && item_r;
+         item_r = item_r->next) {
+
+        erro_create = !list_append(list, item_r->data);
+    }
+
+    list_src->head.next->previous->next = list_src->head.next;
+
+    if (erro_create) {
+        for (ItemList *item_r = list->head.next->previous, *item_p = NULL;
+             item_r != item_rollback; item_r = item_p) {
+
+            item_p = item_r->previous;
+            list_remove_item(list, item_r);
+        }
+    }
+
+    return erro_create;
+}

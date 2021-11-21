@@ -19,7 +19,7 @@ List *list_new();
 ItemList *list_new_item(void *data);
 
 /**
- * Adds an element after ItemBase
+ * Adds an element after ItemBase.
  * @param list List pointer.
  * @param item_base Reference item.
  * @param elmnt Element.
@@ -35,3 +35,11 @@ int list_insert_after_item(List *list, ItemList *item_base, void *elmnt);
  * @return The object if found, or NULL if not.
  */
 ItemList *list_find(List *list, void *value, ICOMPARATOR);
+
+/**
+ * Extend the list by adding list_src to the end.
+ * @param list list extended.
+ * @param list_src Added list.
+ * @return Or 1 if extended, or 0 if not extended.
+ */
+int list_extend(List *list, List *list_src);

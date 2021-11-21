@@ -62,7 +62,8 @@ int list_insert_at(List *list, int index, void *elmnt) {
         return list_append(list, elmnt);
 
     ItemList *item_r = &list->head;
-    for (size_t i = 0; i < index; ++i, item_r = item_r->next);
+    for (size_t i = 0; i < index; ++i, item_r = item_r->next)
+        ;
 
     int rs = list_insert_after_item(list, item_r, elmnt);
 
@@ -112,7 +113,8 @@ void *list_remove_at(List *list, int index) {
         index = list->length - 1;
 
     ItemList *item_r = list->head.next->next;
-    for (size_t i = 1; i < index; ++i, item_r = item_r->next);
+    for (size_t i = 1; i < index; ++i, item_r = item_r->next)
+        ;
 
     return list_remove_item(list, item_r);
 }
@@ -193,4 +195,30 @@ size_t list_count(List *list, void *value, ICOMPARATOR) {
     }
 
     return count;
+}
+
+int list_extend(List *list, List *list_src) {
+
+    if (!list || !list_src || list_is_empty(list) || list_is_empty(list_src))
+        return 0;
+
+    ItemList *item_rollback = list->rear;
+    int erro_create = 0;
+
+    for (ItemList *item_r = list_src->head.next; !erro_create && item_r;
+         item_r = item_r->next) {
+
+        erro_create = !list_append(list, item_r->data);
+    }
+
+    if (erro_create) {
+        for (ItemList *item_r = list->rear, *item_p = NULL;
+             item_r != item_rollback; item_r = item_p) {
+
+            item_p = item_r->previous;
+            list_remove_item(list, item_r);
+        }
+    }
+
+    return erro_create;
 }
