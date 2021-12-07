@@ -3,8 +3,8 @@
  * @date   21/08/2021
  */
 
-#include "stdlib.h"
 #include "../include/binary_tree.h"
+#include "stdlib.h"
 
 /**
  * change the parent of a node
@@ -15,60 +15,27 @@
             child->father = newfather;                                         \
     } while (0);
 
-
-Tree *tree_new() {
-
-    Tree *tree = malloc(sizeof(Tree));
-
-    if (!tree)
-        return NULL;
-
-    tree->root = NULL;
-    tree->length = 0;
-
-    return tree;
-}
-
-Node *tree_new_node(void *elmnt, Node *father) {
-
-    Node *node = malloc(sizeof(Node));
-
-    if (!node)
-        return NULL;
-
-    node->data = elmnt;
-    node->father = father;
-    node->left = node->right = NULL;
-
-    return node;
-}
-
 int tree_is_empty(Node *tree) { return tree == NULL; }
 
-Node *tree_insert(Tree *tree, void *elmnt, ICOMPARATOR) {
+int *tree_insert(Node **tree, Node *new_node, ICOMPARATOR) {
 
-    if (!elmnt)
+    if (!new_node)
         return NULL;
 
-    Node **node_r = &tree->root, *node_f = NULL;
     int rs = 1;
+    Node **node_r = tree, *node_f = NULL;
 
-    while (*node_r && (rs = comparator(elmnt, (*node_r)->data))) {
+    while (*node_r && (rs = comparator(new_node, *node_r))) {
         node_f = *node_r;
         node_r = (rs < 0 ? &(*node_r)->left : &(*node_r)->right);
     }
 
     if (rs == 0)
-        return NULL;
+        return 0;
 
-    Node *node = tree_new_node(elmnt, node_f);
-    if (!node)
-        return NULL;
+    *node_r = new_node;
 
-    *node_r = node;
-    tree->length++;
-
-    return node;
+    return 1;
 }
 
 void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR) {
@@ -131,15 +98,15 @@ void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR) {
     return data;
 }
 
-Node *tree_search_node(Tree *tree, void *elmnt, ICOMPARATOR) {
+Node *tree_search_node(Node *tree, void *elmnt, ICOMPARATOR) {
 
-    if (tree_is_empty(tree->root) || !elmnt)
+    if (tree_is_empty(tree) || !elmnt)
         return NULL;
 
-    Node *node = tree->root;
     int rs = 1;
+    Node *node = tree;
 
-    while (node && (rs = comparator(elmnt, node->data)))
+    while (node && (rs = comparator(elmnt, node)))
         node = (rs < 0 ? node->left : node->right);
 
     return node;
@@ -192,7 +159,8 @@ void *tree_minimum(Node *node) {
         return NULL;
 
     Node *node_aux = NULL;
-    for (node_aux = node; node_aux->left; node_aux = node_aux->left);
+    for (node_aux = node; node_aux->left; node_aux = node_aux->left)
+        ;
 
     return node_aux->data;
 }
@@ -203,7 +171,8 @@ void *tree_maximum(Node *node) {
         return NULL;
 
     Node *node_aux = NULL;
-    for (node_aux = node; node_aux->right; node_aux = node_aux->right);
+    for (node_aux = node; node_aux->right; node_aux = node_aux->right)
+        ;
 
     return node_aux->data;
 }
