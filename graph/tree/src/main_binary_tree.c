@@ -3,9 +3,10 @@
  * @date   21/08/2021
  */
 
+#include "../../../includes/istructure_utils.h"
+#include "../include/binary_tree.h"
 #include "stdio.h"
 #include "stdlib.h"
-#include "../include/binary_tree.h"
 
 #define MAX 16
 #define INPUTSIZE 20 // Input size for test.
@@ -19,13 +20,27 @@ enum option {
     MINIMUMMAXIMUM
 };
 
-int compare_number(void *const a, void *const b);
+typedef struct _Tree {
+    struct _Node *root;
+    size_t length;
+} Tree;
+
+typedef struct _Number {
+    int data;
+    struct _Node node;
+} Number;
+
+int compare_number_node_node(void *const a, void *const b);
+
+int compare_number_elmnt_node(void *const a, void *const b);
 
 void inorder(Node *node);
 
 void preorder(Node *node);
 
 void postorder(Node *node);
+
+Tree *tree_new();
 
 int main(int argc, char const *argv[]) {
 
@@ -43,7 +58,8 @@ int main(int argc, char const *argv[]) {
 
     printf("+++++ Binary Tree +++++\n\n");
 
-    int op, idx, *data = NULL;
+    int op, idx, r;
+    Number *number_aux = NULL;
     Node *node = NULL;
     Tree *tree = tree_new();
 
@@ -53,8 +69,14 @@ int main(int argc, char const *argv[]) {
     }
 
     // Initializing tree
-    for (size_t i = 0; i < MAX - 3; i++)
-        tree_insert(tree, &arr[i], compare_number);
+    for (size_t i = 0; i < MAX - 3; i++) {
+        number_aux = malloc(sizeof(Number));
+        number_aux->data = arr[i];
+
+        tree_insert(&tree->root, &number_aux->node, compare_number_node_node);
+        tree->length++;
+    }
+    number_aux = NULL;
 
     printf("INORDER: ");
     inorder(tree->root);
@@ -67,59 +89,80 @@ int main(int argc, char const *argv[]) {
         switch (op) {
         case INSERT:
             printf("  * INSERT: %d | ", arr[idx]);
-            node = tree_insert(tree, &arr[idx], compare_number);
-            node ? printf("@ Success!\n") : printf("# Fail!\n");
+
+            number_aux = malloc(sizeof(Number));
+            number_aux->data = arr[idx];
+
+            tree->length += (r = tree_insert(&tree->root, &number_aux->node,
+                                             compare_number_node_node));
+            r ? printf("@ Success!\n") : printf("# Fail!\n");
 
             inorder(tree->root);
-            printf(" -> %d\n", tree->length);
+            printf(" -> %lu\n", tree->length);
             printf("\n");
             break;
         case DELETE:
             printf("  * DELETE: %d | ", arr[idx]);
-            data = tree_delete(tree, &arr[idx], compare_number);
-            data ? printf("@ Success!\n") : printf("# Fail!\n");
+            node = tree_remove(&tree->root, &arr[idx], compare_number_elmnt_node);
+            node ? printf("@ Success!\n") : printf("# Fail!\n");
+            tree->length -= node ? 1 : 0;
 
             inorder(tree->root);
-            printf(" -> %d\n", tree->length);
+            printf(" -> %lu\n", tree->length);
             printf("\n");
             break;
         case SEARCHNODE:
             printf("  * SEARCHNODE: %d | ", arr[idx]);
-            node = tree_search_node(tree, &arr[idx], compare_number);
+            node = tree_search(tree->root, &arr[idx], compare_number_elmnt_node);
             if (!node) {
                 printf("# Not Found!\n");
             } else {
                 printf("@ Found! ->");
-                if (node->father)
-                    printf(" FATHER (%d)", *((int *)node->father->data));
-                if (node->left)
-                    printf(" LEFT (%d)", *((int *)node->left->data));
-                if (node->right)
-                    printf(" RIGHT (%d)", *((int *)node->right->data));
+                if (node->father) {
+                    number_aux = GETSTRUCTFROM(node->father, Number, node);
+                    printf(" FATHER (%d)", number_aux->data);
+                }
+                if (node->left) {
+                    number_aux = GETSTRUCTFROM(node->left, Number, node);
+                    printf(" LEFT (%d)", number_aux->data);
+                }
+                if (node->right) {
+                    number_aux = GETSTRUCTFROM(node->right, Number, node);
+                    printf(" RIGHT (%d)", number_aux->data);
+                }
                 printf("\n");
             }
             break;
         case PREDECESSOR:
             printf("  * PREDECESSOR: %d | ", arr[idx]);
-            data = tree_predecessor(
-                tree_search_node(tree, &arr[idx], compare_number));
-            data ? printf("%d\n", *((int *)data)) : printf("Not found!\n");
+            node = tree_predecessor(
+                tree_search(tree->root, &arr[idx], compare_number_elmnt_node));
+
+            node ? printf("%d\n",
+                          ((Number *)GETSTRUCTFROM(node, Number, node))->data)
+                 : printf("Not found!\n");
             break;
         case SUCCESSOR:
             printf("  * SUCCESSOR: %d | ", arr[idx]);
-            data = tree_successor(
-                tree_search_node(tree, &arr[idx], compare_number));
-            data ? printf("%d\n", *((int *)data)) : printf("Not found!\n");
+            node = tree_successor(
+                tree_search(tree->root, &arr[idx], compare_number_elmnt_node));
+
+            node ? printf("%d\n",
+                          ((Number *)GETSTRUCTFROM(node, Number, node))->data)
+                 : printf("Not found!\n");
             break;
         case MINIMUMMAXIMUM:
             printf("  * MINIMUM-MAXIMUM: ");
             if (tree_is_empty(tree->root)) {
                 printf("Tree is empty!\n");
             } else {
-                data = tree_minimum(tree->root);
-                printf("(%d) ", *((int *)data));
-                data = tree_maximum(tree->root);
-                printf("(%d)\n", *((int *)data));
+                node = tree_minimum(tree->root);
+                printf("(%d) ",
+                       ((Number *)GETSTRUCTFROM(node, Number, node))->data);
+
+                node = tree_maximum(tree->root);
+                printf("(%d)\n",
+                       ((Number *)GETSTRUCTFROM(node, Number, node))->data);
             }
             break;
         default:
@@ -146,9 +189,20 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
-int compare_number(void *const a, void *const b) {
+int compare_number_node_node(void *const a, void *const b) {
 
-    return *((int *)a) - *((int *)b);
+    Number const *n_a = GETSTRUCTFROM(a, Number, node);
+    Number const *n_b = GETSTRUCTFROM(b, Number, node);
+
+    return n_a->data - n_b->data;
+}
+
+int compare_number_elmnt_node(void *const a, void *const b) {
+
+    int elmnt = *((int *)a);
+    Number const *n_b = GETSTRUCTFROM(b, Number, node);
+
+    return elmnt - n_b->data;
 }
 
 void inorder(Node *node) {
@@ -157,7 +211,9 @@ void inorder(Node *node) {
         return;
 
     inorder(node->left);
-    printf("%d, ", *((int *)node->data));
+    Number *n = GETSTRUCTFROM(node, Number, node);
+    printf("%d, ", n->data);
+
     inorder(node->right);
 }
 
@@ -166,7 +222,9 @@ void preorder(Node *node) {
     if (tree_is_empty(node))
         return;
 
-    printf("%d, ", *((int *)node->data));
+    Number *n = GETSTRUCTFROM(node, Number, node);
+    printf("%d, ", n->data);
+
     preorder(node->left);
     preorder(node->right);
 }
@@ -178,5 +236,20 @@ void postorder(Node *node) {
 
     postorder(node->left);
     postorder(node->right);
-    printf("%d, ", *((int *)node->data));
+
+    Number *n = GETSTRUCTFROM(node, Number, node);
+    printf("%d, ", n->data);
+}
+
+Tree *tree_new() {
+
+    Tree *tree = malloc(sizeof(Tree));
+
+    if (!tree)
+        return NULL;
+
+    tree->root = NULL;
+    tree->length = 0;
+
+    return tree;
 }

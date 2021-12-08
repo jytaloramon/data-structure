@@ -7,12 +7,6 @@
 
 /**
  * Define the prototype of the struct.
- * struct _Tree Tree.
- */
-typedef struct _Tree Tree;
-
-/**
- * Define the prototype of the struct.
  * struct _Node Node.
  */
 typedef struct _Node Node;
@@ -20,78 +14,62 @@ typedef struct _Node Node;
 /**
  * Check if the tree is empty.
  * @param tree Node instance.
- * @return Or 1 if empty or 0 if not empty.
+ * @return Or 1 if empty, or 0 if not empty.
  */
 int tree_is_empty(Node *tree);
 
 /**
- * Insert a new element in tree.
- *
- * @param tree Node instance.
+ * Insert a new node in the tree.
+ * @param tree_root A root node.
  * @param new_node Node for insertion.
  * @param comparator Function comparator.
+ *      Input in comparator(new_node, actual_node).
  * @return Or 1 for success, or 0 for failure.
  */
-int *tree_insert(Node **tree, Node *new_node, ICOMPARATOR);
+int tree_insert(Node **tree_root, Node *new_node, ICOMPARATOR);
 
 /**
- * Delete a Node of the tree.
- * @param tree Tree instance.
- * @param elmnt Element key deleted.
- * @return Deleted element data, or Null on failure.
+ * Remove a element of the tree.
+ * @param tree_root A root node.
+ * @param elmnt Element key for removal.
+ *      Input in comparator(elmnt, actual_node).
+ * @return Removed Node, or Null on failure/not found.
  */
-void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR);
+Node *tree_remove(Node **tree_root, void *elmnt, ICOMPARATOR);
 
 /**
  * Find the node in the tree.
  * @param tree Node instance.
  * @param elmnt Element key searched.
- * @return The Node instance, or Null on failure.
+ *      Input in comparator(elmnt, actual_node).
+ * @return Node instance if found, or Null.
  */
-Node *tree_search_node(Node *tree, void *elmnt, ICOMPARATOR);
+Node *tree_search(Node *tree, void *elmnt, ICOMPARATOR);
 
 /**
- * Find the node in the tree and return only the data.
- *
- * @param tree Tree instance.
- * @param elmnt Element key searched.
- *
- * @return The data, or Null on failure.
- */
-void *tree_search(Tree *tree, void *elmnt, ICOMPARATOR);
-
-/**
- * Find the element immediately before the node.
- *
+ * Find the node immediately before the node.
  * @param Node instance.
- *
- * @return The data, or Null on failure.
+ * @return Node instance if any, or Null.
  */
-void *tree_predecessor(Node *node);
+Node *tree_predecessor(Node *node);
 
 /**
- * Find the element immediately after the node.
- *
+ * Find the node immediately after the node.
  * @param Node instance.
- *
- * @return The data, or Null on failure.
+ * @return Node instance if any, or Null.
  */
-void *tree_successor(Node *node);
+Node *tree_successor(Node *node);
 
 /**
- * Returns the minimum element of the tree.
- *
+ * Returns the minimum node of the tree.
  * @param Node instance.
- *
- * @return The data, or Null on failure.
+ * @return Node instance if any, or Null.
  */
-void *tree_minimum(Node *node);
+Node *tree_minimum(Node *node);
 
 /**
- * Returns the maximum element of the tree.
- *
+ * Returns the maximum node of the tree.
  * @param Node instance.
- *
- * @return The data, or Null on failure.
+ * @return Node instance if any, or Null.
  */
-void *tree_maximum(Node *node);
+Node *tree_maximum(Node *node);

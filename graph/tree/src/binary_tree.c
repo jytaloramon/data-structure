@@ -5,6 +5,7 @@
 
 #include "../include/binary_tree.h"
 #include "stdlib.h"
+#include "stdio.h"
 
 /**
  * change the parent of a node
@@ -17,36 +18,39 @@
 
 int tree_is_empty(Node *tree) { return tree == NULL; }
 
-int *tree_insert(Node **tree, Node *new_node, ICOMPARATOR) {
+int tree_insert(Node **tree_root, Node *new_node, ICOMPARATOR) {
 
     if (!new_node)
-        return NULL;
+        return 0;
 
     int rs = 1;
-    Node **node_r = tree, *node_f = NULL;
+    Node **node_r = tree_root, *node_f = NULL;
 
     while (*node_r && (rs = comparator(new_node, *node_r))) {
         node_f = *node_r;
         node_r = (rs < 0 ? &(*node_r)->left : &(*node_r)->right);
     }
 
+    // Check duplicate Key
     if (rs == 0)
         return 0;
 
+    new_node->father = node_f;
+    new_node->left = new_node->right = NULL;
     *node_r = new_node;
 
     return 1;
 }
 
-void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR) {
+Node *tree_remove(Node **tree_root, void *elmnt, ICOMPARATOR) {
 
-    if (!elmnt || tree_is_empty(tree->root))
+    if (tree_is_empty(*tree_root) || !elmnt)
         return NULL;
 
-    Node **p_node = &tree->root;
     int rs = 1;
+    Node **p_node = tree_root;
 
-    while (*p_node && (rs = comparator(elmnt, (*p_node)->data)))
+    while (*p_node && (rs = comparator(elmnt, *p_node)))
         p_node = (rs < 0 ? &(*p_node)->left : &(*p_node)->right);
 
     // Key not found.
@@ -54,15 +58,11 @@ void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR) {
         return NULL;
 
     Node *node_aux = *p_node;
-    void *data = node_aux->data;
     *p_node = NULL;
-    tree->length--;
 
     // If there are no children
-    if (tree_is_empty(node_aux->left) && tree_is_empty(node_aux->right)) {
-        free(node_aux);
-        return data;
-    }
+    if (tree_is_empty(node_aux->left) && tree_is_empty(node_aux->right))
+        return node_aux;
 
     Node *child_node = NULL;
 
@@ -93,12 +93,11 @@ void *tree_delete(Tree *tree, void *elmnt, ICOMPARATOR) {
     }
 
     *p_node = child_node;
-    free(node_aux);
 
-    return data;
+    return node_aux;
 }
 
-Node *tree_search_node(Node *tree, void *elmnt, ICOMPARATOR) {
+Node *tree_search(Node *tree, void *elmnt, ICOMPARATOR) {
 
     if (tree_is_empty(tree) || !elmnt)
         return NULL;
@@ -112,14 +111,7 @@ Node *tree_search_node(Node *tree, void *elmnt, ICOMPARATOR) {
     return node;
 }
 
-void *tree_search(Tree *tree, void *elmnt, ICOMPARATOR) {
-
-    Node *node = tree_search_node(tree, elmnt, comparator);
-
-    return !tree_is_empty(node) ? node->data : NULL;
-}
-
-void *tree_predecessor(Node *node) {
+Node *tree_predecessor(Node *node) {
 
     if (tree_is_empty(node))
         return NULL;
@@ -129,14 +121,15 @@ void *tree_predecessor(Node *node) {
 
     for (Node *node_f = node->father; !tree_is_empty(node_f);
          node = node_f, node_f = node->father) {
+
         if (!tree_is_empty(node_f->right) && node == node_f->right)
-            return node_f->data;
+            return node_f;
     }
 
     return NULL;
 }
 
-void *tree_successor(Node *node) {
+Node *tree_successor(Node *node) {
 
     if (tree_is_empty(node))
         return NULL;
@@ -146,33 +139,32 @@ void *tree_successor(Node *node) {
 
     for (Node *node_f = node->father; !tree_is_empty(node_f);
          node = node_f, node_f = node->father) {
+
         if (!tree_is_empty(node_f->left) && node == node_f->left)
-            return node_f->data;
+            return node_f;
     }
 
     return NULL;
 }
 
-void *tree_minimum(Node *node) {
+Node *tree_minimum(Node *node) {
 
     if (tree_is_empty(node))
         return NULL;
 
     Node *node_aux = NULL;
-    for (node_aux = node; node_aux->left; node_aux = node_aux->left)
-        ;
+    for (node_aux = node; node_aux->left; node_aux = node_aux->left);
 
-    return node_aux->data;
+    return node_aux;
 }
 
-void *tree_maximum(Node *node) {
+Node *tree_maximum(Node *node) {
 
     if (tree_is_empty(node))
         return NULL;
 
     Node *node_aux = NULL;
-    for (node_aux = node; node_aux->right; node_aux = node_aux->right)
-        ;
+    for (node_aux = node; node_aux->right; node_aux = node_aux->right);
 
-    return node_aux->data;
+    return node_aux;
 }
