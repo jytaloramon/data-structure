@@ -11,7 +11,7 @@
  * attr: data - Payload.
 */
 struct _ItemStack{
-    void *data;
+    char padding;
 };
 
 /**
@@ -23,7 +23,7 @@ struct _ItemStack{
 */
 struct _Stack{
     int p_top, length, size;
-    struct _ItemStack *items; 
+    struct _ItemStack **items; 
 };
 
 

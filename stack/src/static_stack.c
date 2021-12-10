@@ -1,12 +1,12 @@
 /**
  * @author: Ytalo Ramon
  * @date:   16/06/2021
-*/
+ */
 
-#include "stdlib.h"
 #include "../include/static_stack.h"
+#include "stdlib.h"
 
-Stack *stack_new(int size){
+Stack *stack_new(int size) {
 
     Stack *stack = malloc(sizeof(Stack));
 
@@ -16,9 +16,9 @@ Stack *stack_new(int size){
     stack->p_top = -1;
     stack->length = 0;
     stack->size = size;
-    stack->items = malloc(sizeof(ItemStack) * stack->size);
+    stack->items = malloc(sizeof(ItemStack *) * stack->size);
 
-    if (!stack->items){
+    if (!stack->items) {
         free(stack);
         return NULL;
     }
@@ -26,64 +26,50 @@ Stack *stack_new(int size){
     return stack;
 }
 
-int stack_is_empty(Stack *stack){
+int stack_is_empty(Stack *stack) { return stack->p_top == -1; }
 
-    return stack->p_top == -1; 
-}
+int stack_is_full(Stack *stack) { return stack->p_top == stack->size - 1; }
 
-int stack_is_full(Stack *stack){
+int stack_push(Stack *stack, ItemStack *new_item) {
 
-    return stack->p_top == stack->size - 1;
-}
-
-int stack_push(Stack *stack, void *data){
-   
-    if(stack_is_full(stack)) 
+    if (stack_is_full(stack))
         return 0;
 
-    stack->items[++stack->p_top].data = data;
+    stack->items[++stack->p_top] = new_item;
     stack->length++;
 
     return 1;
 }
 
-void *stack_pop(Stack *stack){
-    
-    if(stack_is_empty(stack))
+ItemStack *stack_pop(Stack *stack) {
+
+    if (stack_is_empty(stack))
         return NULL;
 
-    void *data = stack->items[stack->p_top].data;
-    stack->items[stack->p_top--].data = NULL;
+    ItemStack *item_stack = stack->items[stack->p_top];
+    stack->items[stack->p_top--] = NULL;
     stack->length--;
 
-    return data;
+    return item_stack;
 }
 
-void stack_clear(Stack *stack){
+ItemStack *stack_peek(Stack *stack) {
 
-    for (int i = stack->p_top; i >= 0; --i)
-        free(stack->items[i].data);
-    stack->p_top = -1;
-    stack->length = 0;
-}
-
-void *stack_peek(Stack *stack){
-
-    if(stack_is_empty(stack))
+    if (stack_is_empty(stack))
         return NULL;
 
-    return stack->items[stack->p_top].data;
+    return stack->items[stack->p_top];
 }
 
-int stack_search(Stack *stack, void *value, ICOMPARATOR){
+int stack_search(Stack *stack, void *elmnt, ICOMPARATOR) {
 
     if (stack_is_empty(stack))
         return -1;
 
-    for (int i = stack->p_top; i >= 0; --i){
-        if (!comparator(stack->items[i].data, value))
+    for (int i = stack->p_top; i >= 0; --i) {
+        if (!comparator(elmnt, stack->items[i]))
             return stack->p_top - i;
-    }  
-    
+    }
+
     return -1;
 }
