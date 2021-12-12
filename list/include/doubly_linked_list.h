@@ -9,7 +9,7 @@
 /**
  * struct _List.
  * attr: length - Number of elements currently present in the lists.
- * attr: front - Pointer to the first element in the list..
+ * attr: head - Head List.
  * attr: rear - Pointer to the last element in the list.
  */
 struct _List {

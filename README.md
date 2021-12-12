@@ -5,10 +5,10 @@
 
 <br>
 
-| Topic                       | Name                            | Status |
+| Topic                       | Algorithm                       | Status |
 | --------------------------- | ------------------------------- | ------ |
 | [Heap](heap/)               | Binary Heap                     | [x]    |
-| [List](queue/)              | Static List                     | [x]    |
+| [List](list/)               | Static List                     | [x]    |
 | **                          | Doubly Linked List              | [x]    |
 | [Queue](queue/)             | Static Queue                    | [x]    |
 | **                          | Dynamic Queue                   | [x]    |

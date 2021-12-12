@@ -21,36 +21,31 @@ typedef struct _ItemList ItemList;
 /**
  * Checks if the list is empty.
  * @param list List pointer.
- * @return Or 1 if empty or 0 if not empty.
+ * @return Or 1 if empty, or 0 if not empty.
  */
 int list_is_empty(List *list);
 
 /**
  * Adds an element at the end of the list.
  * @param list List pointer.
- * @param elmnt Element.
- * @return Or 1 if added or 0 if not added.
+ * @param new_item Item for insertion.
+ * @return Or 1 if added, or 0 if not added.
  */
-int list_append(List *list, void *elmnt);
+int list_append(List *list, ItemList *new_item);
 
 /**
  * Remove the fist element.
  * @param list List pointer.
- * @return The instance removed or NULL if list is empty.
+ * @return The item removed, or NULL if list is empty.
  */
-void *list_remove(List *list);
-
-/**
- * Removes all items from the list.
- * @param list List pointer.
- */
-void list_clear(List *list);
+ItemList *list_remove(List *list);
 
 /**
  * Returns the number of ItemList with the specified value.
  * @param list List pointer.
- * @param value Value sought.
+ * @param elmnt Element sought.
  * @param comparator Comparison function.
+ *      Input in comparator(elmnt, itemList_current).
  * @return Number of elements that satisfy the conditions.
  */
-size_t list_count(List *list, void *value, ICOMPARATOR);
+size_t list_count(List *list, void *elmnt, ICOMPARATOR);

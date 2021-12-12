@@ -10,7 +10,7 @@
  * attr: data - Payload.
  */
 struct _ItemList {
-    void *data;
+    char *padding;
 };
 
 /**
@@ -23,7 +23,7 @@ struct _ItemList {
  */
 struct _List {
     int p_front, p_rear, size, length;
-    struct _ItemList *items;
+    struct _ItemList **items;
 };
 
 /**
@@ -36,15 +36,16 @@ List *list_new(int size);
 /**
  * Checks if the queue is full.
  * @param queue Queue pointer.
- * @return Or 1 if full or 0 if not full.
+ * @return Or 1 if full, or 0 if not full.
  */
 int list_is_full(List *list);
 
 /**
  * Returns the first element with the specified value.
  * @param list List pointer.
- * @param value Value sought.
+ * @param elmnt Element sought.
  * @param comparator Comparison function.
+ *      Input in comparator(elmnt, itemList_current).
  * @return The object if found, or NULL if not.
  */
-void *list_find(List *list, void *value, ICOMPARATOR);
+ItemList *list_find(List *list, void *elmnt, ICOMPARATOR);

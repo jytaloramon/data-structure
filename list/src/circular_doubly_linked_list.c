@@ -20,29 +20,16 @@ List *list_new() {
     return list;
 }
 
-ItemList *list_new_item(void *data) {
-
-    ItemList *item = malloc(sizeof(ItemList));
-
-    if (!item)
-        return NULL;
-
-    item->data = data;
-    item->previous = item->next = NULL;
-
-    return item;
-}
-
 int list_is_empty(List *list) { return list->head.next == NULL; }
 
-int list_append(List *list, void *elmnt) {
+int list_append(List *list, ItemList *new_item) {
 
-    if (!list_is_empty(list))
-        return list_insert_after_item(list, list->head.next->previous, elmnt);
-
-    ItemList *new_item = list_new_item(elmnt);
     if (!new_item)
         return 0;
+
+    if (!list_is_empty(list))
+        return list_insert_after_item(list, list->head.next->previous,
+                                      new_item);
 
     new_item->previous = new_item->next = new_item;
     list->head.next = new_item;
@@ -51,39 +38,35 @@ int list_append(List *list, void *elmnt) {
     return 1;
 }
 
-int list_insert_after_item(List *list, ItemList *item, void *elmnt) {
-
-    if (!item)
-        return 0;
-
-    ItemList *new_item = list_new_item(elmnt);
+int list_insert_after_item(List *list, ItemList *item_base,
+                           ItemList *new_item) {
 
     if (!new_item)
         return 0;
 
-    new_item->previous = item;
-    new_item->next = item->next;
-    item->next->previous = new_item;
-    item->next = new_item;
+    new_item->previous = item_base;
+    new_item->next = item_base->next;
+    item_base->next->previous = new_item;
+    item_base->next = new_item;
     list->length++;
 
     return 1;
 }
 
-void *list_remove(List *list) {
+ItemList *list_remove(List *list) {
 
     if (list_is_empty(list))
         return NULL;
 
-    return list_remove_item(list, list->head.next);
+    ItemList *item_list = list->head.next;
+
+    return list_remove_item(list, item_list) ? item_list : 0;
 }
 
-void *list_remove_item(List *list, ItemList *item) {
+int list_remove_item(List *list, ItemList *item) {
 
     if (!item)
-        return NULL;
-
-    void *data = item->data;
+        return 0;
 
     if (item == item->previous) {
         list->head.next = NULL;
@@ -95,89 +78,43 @@ void *list_remove_item(List *list, ItemList *item) {
             list->head.next = item->next;
     }
 
-    free(item);
     list->length--;
 
-    return data;
+    return 1;
 }
 
-void list_clear(List *list) {
-
-    if (list_is_empty(list))
-        return;
-
-    list->head.next->previous->next = NULL;
-
-    for (ItemList *item_r = &list->head, *item_n = NULL; !list_is_empty(list);
-         item_r->next = item_n) {
-
-        item_n = item_r->next->next;
-        free(item_r->next->data);
-        free(item_r->next);
-    }
-}
-
-ItemList *list_find(List *list, void *value, ICOMPARATOR) {
+ItemList *list_find(List *list, void *elmnt, ICOMPARATOR) {
 
     if (list_is_empty(list))
         return NULL;
 
     ItemList *item = list->head.next;
 
-    if (!comparator(item->data, value))
+    if (!comparator(elmnt, item))
         return item;
 
     int rs = 1;
     item = item->next;
 
-    while (item != list->head.next && (rs = comparator(item->data, value))) {
+    while (item != list->head.next && (rs = comparator(elmnt, item))) {
         item = item->next;
     }
 
     return !rs ? item : NULL;
 }
 
-size_t list_count(List *list, void *value, ICOMPARATOR) {
+size_t list_count(List *list, void *elmnt, ICOMPARATOR) {
 
     if (list_is_empty(list))
         return 0;
 
     ItemList *item = list->head.next->next;
-    int count = !comparator(list->head.next->data, value);
+    int count = !comparator(elmnt, list->head.next);
 
     while (item != list->head.next) {
-        count += !comparator(item->data, value);
+        count += !comparator(elmnt, item);
         item = item->next;
     }
 
     return count;
-}
-
-int list_extend(List *list, List *list_src) {
-
-    if (!list || !list_src || list_is_empty(list) || list_is_empty(list_src))
-        return 0;
-
-    list_src->head.next->previous->next = NULL;
-    ItemList *item_rollback = list->head.next->previous;
-    int erro_create = 0;
-
-    for (ItemList *item_r = list_src->head.next; !erro_create && item_r;
-         item_r = item_r->next) {
-
-        erro_create = !list_append(list, item_r->data);
-    }
-
-    list_src->head.next->previous->next = list_src->head.next;
-
-    if (erro_create) {
-        for (ItemList *item_r = list->head.next->previous, *item_p = NULL;
-             item_r != item_rollback; item_r = item_p) {
-
-            item_p = item_r->previous;
-            list_remove_item(list, item_r);
-        }
-    }
-
-    return erro_create;
 }
