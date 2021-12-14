@@ -30,7 +30,8 @@ int list_append(List *list, ItemList *new_item) {
 
     if (!list_is_empty(list))
         new_item->previous = list->rear;
-
+    
+    new_item->next = NULL;
     list->rear->next = new_item;
     list->rear = list->rear->next;
     list->length++;
