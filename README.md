@@ -10,6 +10,7 @@
 | [Heap](heap/)               | Binary Heap                     | [x]    |
 | [List](list/)               | Static List                     | [x]    |
 | **                          | Doubly Linked List              | [x]    |
+| **                          | Circular Doubly Linked List     | [x]    |
 | [Queue](queue/)             | Static Queue                    | [x]    |
 | **                          | Dynamic Queue                   | [x]    |
 | [Range-Query](range-query/) | Fenwick Tree  [1D, 2D]          | [x]    |
@@ -21,6 +22,7 @@
 | **                          | Insertion Sort                  | [x]    |
 | **                          | Merge Sort                      | [x]    |
 | **                          | Quick Sort                      | [x]    |
+| **                          | Tim Sort                        | []     |
 | **                          | Heap Sort                       | []     |
 | **                          | Count Sort                      | []     |
 | **                          | Bucket Sort                     | []     |
