@@ -1,9 +1,16 @@
 /**
  * @author Ytalo Ramon
- * @date   15/06/2021
+ * @date   24/12/2021
  */
 
-#include "linked_list_base.h"
+#include "../../includes/icomparator.h"
+#include "stdlib.h"
+
+/**
+ * Define the prototype of the struct.
+ * struct _ItemList ItemList.
+ */
+typedef struct _ItemDLList ItemDLList;
 
 /**
  * struct _ItemList.
@@ -11,14 +18,6 @@
  * attr: last - Pointer to the previous element in the chain.
  * attr: next - Pointer to the next element in the chain.
  */
-struct _ItemList {
-    struct _ItemList *previous, *next;
+struct _ItemDLList {
+    struct _ItemDLList *previous, *next;
 };
-
-/**
- * Remove the item from the list.
- * @param list List pointer.
- * @param item Item to be removed.
- * @return Or 1 on success, or NULL on failure.
- */
-int list_remove_item(List *list, ItemList *item);
