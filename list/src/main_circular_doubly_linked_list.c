@@ -15,19 +15,19 @@ enum options { APPEND, INSERTAFTER, REMOVE, REMOVEITEM, FIND, COUNT };
 
 typedef struct _Cel {
     char data;
-    ItemList item_list;
+    DllItem item_list;
 } Cel;
 
 int comparator(void *const a, void *const b);
 
-void list_show(List *list);
+void list_show(CdlList *list);
 
 int main(int argc, char const *argv[]) {
 
     int op, rs;
     char *value1;
     Cel *cel_aux = NULL;
-    ItemList *item_list_aux = NULL;
+    DllItem *item_list_aux = NULL;
 
     char test_cases[INPUTSIZE][4] = {
         {REMOVE, '_', '_'},      {APPEND, 'A', '_'},     {APPEND, 'B', '_'},
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[]) {
         {FIND, 'F', '_'},        {REMOVEITEM, '_', '_'},
     };
 
-    List *list = list_new();
+    CdlList *list = cdll_new();
 
     printf("+++++ CIRCULAR DOUBLY LINKED LIST +++++\n\n");
     list_show(list);
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) {
             cel_aux = malloc(sizeof(Cel));
             cel_aux->data = *value1;
 
-            rs = list_append(list, &cel_aux->item_list);
+            rs = cdll_append(list, &cel_aux->item_list);
             rs == 1 ? printf("Success\n") : printf("Fail!\n");
             list_show(list);
             break;
@@ -73,15 +73,15 @@ int main(int argc, char const *argv[]) {
             cel_aux = malloc(sizeof(Cel));
             cel_aux->data = *value1;
 
-            rs = list_insert_after_item(list, item_list_aux,
-                                        &cel_aux->item_list);
+            rs = cdll_item_append(&cel_aux->item_list, item_list_aux);
             rs ? printf("Success\n") : printf("Fail!\n");
+            list->length += rs;
             list_show(list);
             break;
         case REMOVE:
             printf("REMOVE: ");
 
-            item_list_aux = list_remove(list);
+            item_list_aux = cdll_remove(list);
             item_list_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))
@@ -92,14 +92,19 @@ int main(int argc, char const *argv[]) {
         case REMOVEITEM:
             printf("REMOVEITEM (%c): ",
                    ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))->data);
-
-            rs = list_remove_item(list, item_list_aux);
+            
+            if (item_list_aux == list->head.next)
+                 list->head.next = item_list_aux->next;
+            
+            rs =  cdll_item_remove(item_list_aux);
             rs ? printf("Success\n") : printf("Fail!\n");
+
+            list->length -= rs;
             list_show(list);
             break;
         case FIND:
             printf("FIND (%c): ", *value1);
-            item_list_aux = list_find(list, value1, comparator);
+            item_list_aux = cdll_find(list, value1, comparator);
             item_list_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))
@@ -107,7 +112,7 @@ int main(int argc, char const *argv[]) {
                 : printf("Not Found!\n");
             break;
         case COUNT:
-            rs = list_count(list, value1, comparator);
+            rs = cdll_count(list, value1, comparator);
             printf("COUNT (%c): %d\n", *value1, rs);
             break;
         default:
@@ -129,20 +134,20 @@ int comparator(void *const a, void *const b) {
     return elmnt - cel->data;
 }
 
-void list_show(List *list) {
+void list_show(CdlList *list) {
 
     printf("\n @ List SHOW: ");
 
-    if (!list_is_empty(list)) {
+    if (!cdll_is_empty(list)) {
 
         printf("%c, ",
                ((Cel *)GETSTRUCTFROM(list->head.next, Cel, item_list))->data);
 
-        for (ItemList *item = list->head.next->next; item != list->head.next;
+        for (DllItem *item = list->head.next->next; item != list->head.next;
              item = item->next) {
             printf("%c, ", ((Cel *)GETSTRUCTFROM(item, Cel, item_list))->data);
         }
-        printf("[%d]\n--------------", list->length);
+        printf("[%lu]\n--------------", list->length);
 
         for (int i = 0; i < list->length; ++i)
             printf("---");
