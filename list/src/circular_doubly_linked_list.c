@@ -1,6 +1,6 @@
 /**
  * @author Ytalo Ramon
- * @date   03/01/2021
+ * @date   03/01/2022
  */
 
 #include "../include/circular_doubly_linked_list.h"
@@ -139,11 +139,8 @@ size_t cdll_item_count(DllItem *item_s, DllItem *item_e, void *elmnt,
 
     size_t count = 0;
 
-    for (DllItem *item_r = item_s; item_r != item_e; item_r = item_r->next) {
-
-        if (comparator(elmnt, item_r) == 0)
-            count++;
-    }
+    for (DllItem *item_r = item_s; item_r != item_e; item_r = item_r->next)
+        count += (comparator(elmnt, item_r) == 0 ? 1 : 0);
 
     return count + (comparator(elmnt, item_e) == 0 ? 1 : 0);
 }

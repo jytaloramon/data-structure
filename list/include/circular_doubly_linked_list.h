@@ -1,6 +1,6 @@
 /**
  * @author Ytalo Ramon
- * @date   03/01/2021
+ * @date   03/01/2022
  */
 
 #include "../../includes/icomparator.h"
@@ -100,9 +100,8 @@ int cdll_item_append(DllItem *new_item, DllItem *prev_item);
 
 /**
  * Remove the item and link your current previous and next.
- * @param list List pointer.
- * @param item Item to be removed.
- * @return Or 1 on success or NULL on failure.
+ * @param rm_item Item to be removed.
+ * @return Or 1 on success or 0 on failure.
  */
 int cdll_item_remove(DllItem *rm_item);
 

@@ -1,6 +1,6 @@
 /**
  * @author Ytalo Ramon
- * @date   16/11/2021
+ * @date   10/01/2022
  */
 
 #include "../../includes/icomparator.h"
@@ -9,110 +9,167 @@
 
 /**
  * Define the prototype of the struct.
- * struct _List List.
+ * struct _DlList DlList.
  */
-typedef struct _List List;
+typedef struct _DlList DlList;
 
 /**
- * struct _List.
+ * struct _DlList.
  * attr: length - Number of elements currently present in the lists.
  * attr: head - Head List.
  * attr: rear - Pointer to the last element in the list.
  */
-struct _List {
+struct _DlList {
     size_t length;
     struct _DllItem head, *rear;
 };
 
 /**
- * Create a new list.
- * @return A list instance or Null in case of error.
+ * Create a new DlList.
+ * @return A DlList instance or Null in case of error.
  */
-List *list_new();
+DlList *dll_new();
 
 /**
- * Adds an element after ItemBase.
- * @param list List pointer.
- * @param item_base Reference item.
+ * Checks if the DlList is empty.
+ * @param dll DlList pointer.
+ * @return Or 1 if empty or 0 if not empty.
+ */
+int dll_is_empty(DlList *dll);
+
+/**
+ * Add an element before the list first item.
+ * @param dll DlList pointer.
  * @param new_item Item for insertion.
  * @return Or 1 if added or 0 if not added.
  */
-int list_insert_after_item(List *list, ItemList *item_base, ItemList *new_item);
-
-/**
- * Returns the first ItemList with the specified value.
- * @param list List pointer.
- * @param elmnt Element sought.
- * @param comparator Comparison function.
- *      Input in comparator(elmnt, itemList_current).
- * @return The object if found, or NULL if not.
- */
-ItemList *list_find(List *list, void *elmnt, ICOMPARATOR);
-
-/**
- * Checks if the list is empty.
- * @param list List pointer.
- * @return Or 1 if empty, or 0 if not empty.
- */
-int list_is_empty(List *list);
-
-/**
- * Adds an element at the end of the list.
- * @param list List pointer.
- * @param new_item Item for insertion.
- * @return Or 1 if added, or 0 if not added.
- */
-int list_append(List *list, ItemList *new_item);
-
-/**
- * Remove the fist element.
- * @param list List pointer.
- * @return The item removed, or NULL if list is empty.
- */
-ItemList *list_remove(List *list);
-
-/**
- * Returns the number of ItemList with the specified value.
- * @param list List pointer.
- * @param elmnt Element sought.
- * @param comparator Comparison function.
- *      Input in comparator(elmnt, itemList_current).
- * @return Number of elements that satisfy the conditions.
- */
-size_t list_count(List *list, void *elmnt, ICOMPARATOR);
+int dll_append(DlList *dll, DllItem *new_item);
 
 /**
  * Adds an element at the specified position.
- * @param list List pointer.
+ * @param dll DlList pointer.
  * @param new_item Item for insertion.
  * @param index Insertion position.
  * @return Or 1 if added or 0 if not added.
  */
-int list_insert_at(List *list, ItemList *new_item, int index);
+int dll_insert_at(DlList *dll, DllItem *new_item, size_t index);
+
+/**
+ * Remove the first element.
+ * @param dll DlList pointer.
+ * @return The item removed, or NULL if list is empty.
+ */
+DllItem *dll_remove(DlList *dll);
 
 /**
  * Remove the element at the specified position.
- * @param list List pointer.
+ * @param dll DlList pointer.
  * @param index Position of the removed element.
  *      Value -1 to remove the last element.
  * @return The item removed, or NULL if list is empty.
  */
-ItemList *list_remove_at(List *list, int index);
+DllItem *dll_remove_at(DlList *dll, size_t index);
+
+/**
+ * Remove the last element.
+ * @param dll DlList pointer.
+ * @return The item removed, or NULL if list is empty.
+ */
+DllItem *dll_pop(DlList *dll);
+
+/**
+ * Returns the first DllItem with the specified value.
+ * @param dll CdlList pointer.
+ * @param elmnt Element sought.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, DllItem_curr).
+ * @return The item if found, or NULL if not.
+ */
+DllItem *dll_find(DlList *dll, void *elmnt, ICOMPARATOR);
+
+/**
+ * Returns the number of DllItem with the specified value.
+ * @param dll DlList pointer.
+ * @param elmnt Element sought.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, DllItem_curr).
+ * @return Number of itens that satisfy the conditions.
+ */
+size_t dll_count(DlList *dll, void *elmnt, ICOMPARATOR);
 
 /**
  * Returns the index of the first element with the specified value.
- * @param list List pointer.
+ * @param dll DlList pointer.
  * @param elmnt Element sought.
  * @param comparator Comparison function.
  *      Input in comparator(elmnt, itemList_current).
- * @return Object index if found, or -1 if not.
+ * @return Object index if found, or -1 if not found.
  */
-int list_index_of(List *list, void *elmnt, ICOMPARATOR);
+int dll_index_of(DlList *dll, void *elmnt, ICOMPARATOR);
 
 /**
- * Remove the item from the list.
- * @param list List pointer.
- * @param item Item to be removed.
- * @return Or 1 on success, or NULL on failure.
+ * Links an item to its previous and next.
+ * @param item Reference item.
+ * @param prev Previous item.
+ * @param next Next item.
  */
-int list_remove_item(List *list, ItemList *item);
+void dll_item_link(DllItem *item, DllItem *prev, DllItem *next);
+
+/**
+ * Add an element after a base item.
+ * @param new_item Item for insertion.
+ * @param prev_item Base/Previous item.
+ * @return Or 1 if added or 0 if not added.
+ */
+int dll_item_append(DllItem *new_item, DllItem *prev_item);
+
+/**
+ * Remove the item and link your current previous and next.
+ * @param rm_item Item to be removed.
+ * @return Or 1 on success or NULL on failure.
+ */
+int dll_item_remove(DllItem *rm_item);
+
+/**
+ * Returns the first DllItem with the specified value within the range.
+ * @param item_s The starting item.
+ * @param item_e The final item.
+ * @param elmnt Element sought.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, DllItem_curr).
+ * @return The item if found, or NULL if not.
+ */
+DllItem *dll_item_find(DllItem *item_s, DllItem *item_e, void *elmnt,
+                       ICOMPARATOR);
+
+/**
+ * Returns the number of DllItem with the specified value within the range.
+ * @param item_s The starting item.
+ * @param item_e The final item.
+ * @param elmnt Element sought.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, DllItem_curr).
+ * @return Number of itens that satisfy the conditions.
+ */
+size_t dll_item_count(DllItem *item_s, DllItem *item_e, void *elmnt,
+                      ICOMPARATOR);
+
+/**
+ * Returns the offset between the first DllItem with the specified value
+ *  and the starting item of the range.
+ * @param item_s The starting item.
+ * @param item_e The final item.
+ * @param elmnt Element sought.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, DllItem_curr).
+ * @return The offset if found, or -1 if not found.
+ */
+int dll_item_offset(DllItem *item_s, DllItem *item_e, void *elmnt, ICOMPARATOR);
+
+/**
+ * Join two sequences of DllItem.
+ * @param item_ls1 The last item seq_1.
+ * @param item_fs2 The first item seq_2.
+ * @return Or 1 if successful or 0 if not successful.
+ */
+int dll_item_join(DllItem *item_ls1, DllItem *item_fs2);
