@@ -1,120 +1,180 @@
 /**
  * @author Ytalo Ramon
- * @date   16/11/2021
+ * @date   03/01/2022
  */
 
 #include "../include/circular_doubly_linked_list.h"
-#include "stdio.h"
-#include "string.h"
+#include "stdlib.h"
 
-List *list_new() {
+CdlList *cdll_new() {
 
-    List *list = malloc(sizeof(List));
+    CdlList *cdll = malloc(sizeof(CdlList));
 
-    if (!list)
+    if (!cdll)
         return NULL;
 
-    list->head.previous = list->head.next = NULL;
-    list->length = 0;
+    cdll->head.previous = cdll->head.next = NULL;
+    cdll->length = 0;
 
-    return list;
+    return cdll;
 }
 
-int list_is_empty(List *list) { return list->head.next == NULL; }
+int cdll_is_empty(CdlList *cdll) { return cdll->head.next == NULL; }
 
-int list_append(List *list, ItemList *new_item) {
+int cdll_append(CdlList *cdll, DllItem *new_item) {
+
+    if (!cdll_is_empty(cdll)) {
+        int rs = cdll_item_append(new_item, cdll->head.next->previous);
+        cdll->length += rs;
+
+        return rs;
+    }
 
     if (!new_item)
         return 0;
 
-    if (!list_is_empty(list))
-        return list_insert_after_item(list, list->head.next->previous,
-                                      new_item);
-
-    new_item->previous = new_item->next = new_item;
-    list->head.next = new_item;
-    list->length++;
+    cdll_item_link(new_item, new_item, new_item);
+    cdll->head.next = new_item;
+    cdll->length++;
 
     return 1;
 }
 
-int list_insert_after_item(List *list, ItemList *item_base,
-                           ItemList *new_item) {
+DllItem *cdll_remove(CdlList *cdll) {
 
-    if (!new_item)
-        return 0;
-
-    new_item->previous = item_base;
-    new_item->next = item_base->next;
-    item_base->next->previous = new_item;
-    item_base->next = new_item;
-    list->length++;
-
-    return 1;
-}
-
-ItemList *list_remove(List *list) {
-
-    if (list_is_empty(list))
+    if (cdll_is_empty(cdll))
         return NULL;
 
-    ItemList *item_list = list->head.next;
+    DllItem *rm_item = cdll->head.next;
 
-    return list_remove_item(list, item_list) ? item_list : 0;
-}
-
-int list_remove_item(List *list, ItemList *item) {
-
-    if (!item)
-        return 0;
-
-    if (item == item->previous) {
-        list->head.next = NULL;
+    if (rm_item == rm_item->previous) {
+        cdll->head.next = NULL;
+        rm_item->previous = rm_item->next = NULL;
     } else {
-        item->previous->next = item->next;
-        item->next->previous = item->previous;
-
-        if (list->head.next == item)
-            list->head.next = item->next;
+        cdll->head.next = rm_item->next;
+        cdll_item_remove(rm_item);
     }
 
-    list->length--;
+    cdll->length--;
+
+    return rm_item;
+}
+
+DllItem *cdll_find(CdlList *cdll, void *elmnt, ICOMPARATOR) {
+
+    if (cdll_is_empty(cdll))
+        return NULL;
+
+    return cdll_item_find(cdll->head.next, cdll->head.next->previous, elmnt,
+                          comparator);
+}
+
+size_t cdll_count(CdlList *cdll, void *elmnt, ICOMPARATOR) {
+
+    if (cdll_is_empty(cdll))
+        return 0;
+
+    return cdll_item_count(cdll->head.next, cdll->head.next->previous, elmnt,
+                           comparator);
+}
+
+int cdll_offset(CdlList *cdll, void *elmnt, ICOMPARATOR) {
+
+    if (cdll_is_empty(cdll))
+        return -1;
+
+    return cdll_item_offset(cdll->head.next, cdll->head.next->previous, elmnt,
+                            comparator);
+}
+
+void cdll_item_link(DllItem *item, DllItem *prev, DllItem *next) {
+
+    item->previous = prev;
+    item->next = next;
+    prev->next = next->previous = item;
+}
+
+int cdll_item_append(DllItem *new_item, DllItem *prev_item) {
+
+    if (!new_item || !prev_item)
+        return 0;
+
+    cdll_item_link(new_item, prev_item, prev_item->next);
 
     return 1;
 }
 
-ItemList *list_find(List *list, void *elmnt, ICOMPARATOR) {
+int cdll_item_remove(DllItem *rm_item) {
 
-    if (list_is_empty(list))
-        return NULL;
-
-    ItemList *item = list->head.next;
-
-    if (!comparator(elmnt, item))
-        return item;
-
-    int rs = 1;
-    item = item->next;
-
-    while (item != list->head.next && (rs = comparator(elmnt, item))) {
-        item = item->next;
-    }
-
-    return !rs ? item : NULL;
-}
-
-size_t list_count(List *list, void *elmnt, ICOMPARATOR) {
-
-    if (list_is_empty(list))
+    if (!rm_item)
         return 0;
 
-    ItemList *item = list->head.next->next;
-    int count = !comparator(elmnt, list->head.next);
+    rm_item->previous->next = rm_item->next;
+    rm_item->next->previous = rm_item->previous;
+    rm_item->previous = rm_item->next = NULL;
 
-    while (item != list->head.next) {
-        count += !comparator(elmnt, item);
-        item = item->next;
+    return 1;
+}
+
+DllItem *cdll_item_find(DllItem *item_s, DllItem *item_e, void *elmnt,
+                        ICOMPARATOR) {
+
+    if (!item_s || !item_e)
+        return NULL;
+
+    for (DllItem *item_r = item_s; item_r != item_e; item_r = item_r->next) {
+
+        if (comparator(elmnt, item_r) == 0)
+            return item_r;
     }
 
-    return count;
+    return comparator(elmnt, item_e) == 0 ? item_e : NULL;
+}
+
+size_t cdll_item_count(DllItem *item_s, DllItem *item_e, void *elmnt,
+                       ICOMPARATOR) {
+
+    if (!item_s || !item_e)
+        return 0;
+
+    size_t count = 0;
+
+    for (DllItem *item_r = item_s; item_r != item_e; item_r = item_r->next)
+        count += (comparator(elmnt, item_r) == 0 ? 1 : 0);
+
+    return count + (comparator(elmnt, item_e) == 0 ? 1 : 0);
+}
+
+int cdll_item_offset(DllItem *item_s, DllItem *item_e, void *elmnt,
+                     ICOMPARATOR) {
+
+    if (!item_s || !item_e)
+        return -1;
+
+    size_t offset = 0;
+
+    for (DllItem *item_r = item_s; item_r != item_e; item_r = item_r->next) {
+
+        if (comparator(elmnt, item_r) == 0)
+            return offset;
+
+        offset++;
+    }
+
+    return comparator(elmnt, item_e) == 0 ? offset : -1;
+}
+
+int cdll_item_join(DllItem *item_s1, DllItem *item_s2) {
+
+    if (!item_s1 || !item_s2)
+        return 0;
+
+    DllItem *prev_s2 = item_s2->previous;
+
+    item_s1->previous->next = item_s2;
+    item_s2->previous = item_s1->previous;
+    prev_s2->next = item_s1;
+    item_s1->previous = prev_s2;
+
+    return 1;
 }
