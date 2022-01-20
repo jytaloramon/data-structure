@@ -47,7 +47,7 @@ DllItem *cdll_remove(CdlList *cdll) {
 
     DllItem *rm_item = cdll->head.next;
 
-    if (rm_item == rm_item->previous) {
+    if (cdll_item_is_alone(rm_item)) {
         cdll->head.next = NULL;
         rm_item->previous = rm_item->next = NULL;
     } else {
@@ -86,6 +86,8 @@ int cdll_offset(CdlList *cdll, void *elmnt, ICOMPARATOR) {
     return cdll_item_offset(cdll->head.next, cdll->head.next->previous, elmnt,
                             comparator);
 }
+
+int cdll_item_is_alone(DllItem *item) { return item == item->previous; }
 
 void cdll_item_link(DllItem *item, DllItem *prev, DllItem *next) {
 

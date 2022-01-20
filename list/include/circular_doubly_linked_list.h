@@ -83,6 +83,13 @@ size_t cdll_count(CdlList *cdll, void *elmnt, ICOMPARATOR);
 int cdll_offset(CdlList *cdll, void *elmnt, ICOMPARATOR);
 
 /**
+ * Check if the item is alone in the sequence.
+ * @param item DllItem pointer.
+ * @return Or 1 if is alone or 0 if not alone.
+ */
+int cdll_item_is_alone(DllItem *item);
+
+/**
  * Links an item to its previous and next.
  * @param item Reference item.
  * @param prev Previous item.
