@@ -8,117 +8,126 @@
 
 /**
  * Define the prototype of the struct.
- * struct _List List.
+ * struct _SList SList.
  */
-typedef struct _List List;
+typedef struct _SList SList;
 
 /**
  * Define the prototype of the struct.
- * struct _ItemList ItemList.
+ * struct _SlItem SlItem.
  */
-typedef struct _ItemList ItemList;
+typedef struct _SlItem SlItem;
 
 /**
- * struct _ItemList.
- * attr: data - Payload.
+ * struct _SlItem.
+ * attr: padding - Padding (blank space).
  */
-struct _ItemList {
-    char *padding;
+struct _SlItem {
+    char padding;
 };
 
 /**
- * struct _List.
- * attr: p_front - Index of the first element of the list.
- * attr: p_rear - Index of the last element of the list.
+ * struct _SList.
+ * attr: p_front - Index of the first item of the list.
+ * attr: p_rear - Index of the last item of the list + 1.
  * attr: size - List size.
- * attr: length - Number of elements currently present in the lists.
- * attr: items - array of elements.
+ * attr: length - Number of item currently present in the lists.
+ * attr: items - array of items.
  */
-struct _List {
-    int p_front, p_rear, size, length;
-    struct _ItemList **items;
+struct _SList {
+    size_t p_front, p_rear, size, length;
+    struct _SlItem **items;
 };
 
 /**
- * Create a new list.
+ * Create a new Static List(SList).
+ *
  * @param size List size.
  * @return A list instance or Null in case of error.
  */
-List *list_new(int size);
+SList *sl_new(size_t size);
 
 /**
  * Checks if the list is empty.
- * @param list List pointer.
- * @return Or 1 if empty, or 0 if not empty.
+ *
+ * @param list SList pointer.
+ * @return Or 1 if empty or 0 if not empty.
  */
-int list_is_empty(List *list);
+int sl_is_empty(SList *list);
 
 /**
- * Checks if the queue is full.
- * @param queue Queue pointer.
- * @return Or 1 if full, or 0 if not full.
+ * Checks if the list is full.
+ *
+ * @param list SList pointer.
+ * @return Or 1 if full or 0 if not full.
  */
-int list_is_full(List *list);
+int sl_is_full(SList *list);
 
 /**
- * Adds an element at the end of the list.
- * @param list List pointer.
- * @param new_item Item for insertion.
+ * Adds an item at the end of the list.
+ *
+ * @param list SList pointer.
+ * @param new_item SlItem for insertion.
  * @return Or 1 if added, or 0 if not added.
  */
-int list_append(List *list, ItemList *new_item);
+int sl_append(SList *list, SlItem *new_item);
 
 /**
- * Adds an element at the specified position.
- * @param list List pointer.
- * @param new_item Item for insertion.
+ * Adds an item at the specified position.
+ *
+ * @param list SList pointer.
+ * @param new_item SlItem for insertion.
  * @param index Insertion position.
  * @return Or 1 if added or 0 if not added.
  */
-int list_insert_at(List *list, ItemList *new_item, int index);
+int sl_insert_at(SList *list, SlItem *new_item, size_t index);
 
 /**
- * Remove the fist element.
- * @param list List pointer.
+ * Remove the fist item.
+ *
+ * @param list SList pointer.
+ * @return The SlItem removed or NULL.
+ */
+SlItem *sl_remove(SList *list);
+
+/**
+ * Remove the item at the specified position.
+ *
+ * @param list SList pointer.
+ * @param index Item index.
  * @return The item removed, or NULL if list is empty.
  */
-ItemList *list_remove(List *list);
+SlItem *sl_remove_at(SList *list, size_t index);
 
 /**
- * Remove the element at the specified position.
- * @param list List pointer.
- * @param index Position of the removed element.
- *      Value -1 to remove the last element.
- * @return The item removed, or NULL if list is empty.
- */
-ItemList *list_remove_at(List *list, int index);
-
-/**
- * Returns the number of ItemList with the specified value.
- * @param list List pointer.
+ * Returns the number of items with the specified value.
+ *
+ * @param list SList pointer.
  * @param elmnt Element sought.
  * @param comparator Comparison function.
- *      Input in comparator(elmnt, itemList_current).
- * @return Number of elements that satisfy the conditions.
+ *      Input in comparator(elmnt, SlItem_curr).
+ * @return Number of items that satisfy the conditions.
  */
-size_t list_count(List *list, void *elmnt, ICOMPARATOR);
+size_t sl_count(SList *list, void *elmnt, ICOMPARATOR);
 
 /**
- * Returns the first element with the specified value.
- * @param list List pointer.
+ * Returns the first item with the specified value.
+ *
+ * @param list SList pointer.
  * @param elmnt Element sought.
  * @param comparator Comparison function.
- *      Input in comparator(elmnt, itemList_current).
- * @return The object if found, or NULL if not.
+ *      Input in comparator(elmnt, SlItem_curr).
+ * @return The item if found, or NULL if not.
  */
-ItemList *list_find(List *list, void *elmnt, ICOMPARATOR);
+SlItem *sl_find(SList *list, void *elmnt, ICOMPARATOR);
 
 /**
- * Returns the index of the first element with the specified value.
- * @param list List pointer.
+ * Returns the index of the first item with the specified value.
+ *
+ * @param list SList pointer.
  * @param elmnt Element sought.
  * @param comparator Comparison function.
- *      Input in comparator(elmnt, itemList_current).
- * @return Object index if found, or -1 if not.
+ *      Input in comparator(elmnt, SlItem_curr).
+ * @return Item index if found, or -1 if not.
  */
-int list_index_of(List *list, void *elmnt, ICOMPARATOR);
+int sl_index_of(SList *list, void *elmnt, ICOMPARATOR);

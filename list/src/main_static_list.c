@@ -16,19 +16,19 @@ enum options { APPEND, INSERTAT, REMOVE, REMOVEAT, INDEXOF, FIND, COUNT };
 
 typedef struct _Cel {
     char data;
-    ItemList item_list;
+    struct _SlItem item_list;
 } Cel;
 
 int comparator(void *const a, void *const b);
 
-void list_show(List *list);
+void list_show(SList *list);
 
 int main(int argc, char const *argv[]) {
 
     int op, rs;
     char *value1, *value2;
     Cel *cel_aux = NULL;
-    ItemList *item_list_aux = NULL;
+    SlItem *item_list_aux = NULL;
 
     char test_cases[INPUTSIZE][4] = {
         {REMOVE, '_'},       {APPEND, 'A', '_'},  {APPEND, 'B', '_'},
@@ -43,7 +43,7 @@ int main(int argc, char const *argv[]) {
         {APPEND, 'T', '_'},  {FIND, 'T', '_'},    {REMOVE, '_', '_'},
     };
 
-    List *list = list_new(10);
+    SList *list = sl_new(10);
 
     printf("+++++ STATIC LIST +++++\n\n");
     list_show(list);
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) {
             cel_aux = malloc(sizeof(Cel));
             cel_aux->data = *value1;
 
-            rs = list_append(list, &cel_aux->item_list);
+            rs = sl_append(list, &cel_aux->item_list);
             rs == 1 ? printf("Success\n") : printf("Fail!\n");
             list_show(list);
             break;
@@ -71,14 +71,14 @@ int main(int argc, char const *argv[]) {
             cel_aux = malloc(sizeof(Cel));
             cel_aux->data = *value2;
 
-            rs = list_insert_at(list, &cel_aux->item_list, (int)*value1);
+            rs = sl_insert_at(list, &cel_aux->item_list, (int)*value1);
             rs ? printf("Success\n") : printf("Fail!\n");
             list_show(list);
             break;
         case REMOVE:
             printf("REMOVE: ");
 
-            item_list_aux = list_remove(list);
+            item_list_aux = sl_remove(list);
             item_list_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))
@@ -89,7 +89,8 @@ int main(int argc, char const *argv[]) {
         case REMOVEAT:
             printf("REMOVEAT (%d): ", *value1);
 
-            item_list_aux = list_remove_at(list, (int)*value1);
+            item_list_aux = sl_remove_at(
+                list, ((int)*value1 != -1 ? (int)*value1 : list->length - 1));
             item_list_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))
@@ -100,13 +101,13 @@ int main(int argc, char const *argv[]) {
         case INDEXOF:
             printf("INDEXOF (%c): ", *value1);
 
-            rs = list_index_of(list, value1, comparator);
+            rs = sl_index_of(list, value1, comparator);
             rs != -1 ? printf("%d\n", rs) : printf("Not Found!\n");
             break;
         case FIND:
             printf("FIND (%c): ", *value1);
-            
-            item_list_aux = list_find(list, value1, comparator);
+
+            item_list_aux = sl_find(list, value1, comparator);
             item_list_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_list_aux, Cel, item_list))
@@ -114,7 +115,7 @@ int main(int argc, char const *argv[]) {
                 : printf("Not Found!\n");
             break;
         case COUNT:
-            rs = list_count(list, value1, comparator);
+            rs = sl_count(list, value1, comparator);
             printf("COUNT (%c): %d\n", *value1, rs);
             break;
         default:
@@ -136,11 +137,11 @@ int comparator(void *const a, void *const b) {
     return elmnt - cel->data;
 }
 
-void list_show(List *list) {
+void list_show(SList *list) {
 
     printf("\n @ List SHOW: ");
 
-    if (!list_is_empty(list)) {
+    if (!sl_is_empty(list)) {
         for (int i = list->p_front; i != list->p_rear;
              i = divmodular(i + 1, list->size)) {
             printf(
@@ -148,7 +149,7 @@ void list_show(List *list) {
                 ((Cel *)GETSTRUCTFROM(list->items[i], Cel, item_list))->data);
         }
 
-        printf("[%d]\n--------------", list->length);
+        printf("[%lu]\n--------------", list->length);
 
         for (int i = 0; i < list->length; ++i)
             printf("---");
