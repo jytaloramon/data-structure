@@ -1,97 +1,30 @@
 /**
  * @author Ytalo Ramon
- * @date   13/02/2021    
-*/
+ * @date   13/02/2021
+ */
 
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
 #include "../include/static_queue.h"
+#include "stdlib.h"
 
-Queue *queue_new(int size){
+SList *sq_new(size_t size) { return sl_new(size); }
 
-    Queue *queue = malloc(sizeof(Queue));
-    
-    if (!queue)
-        return NULL;
+int sq_is_empty(SList *queue) { return sl_is_empty(queue); }
 
-    queue->p_front = queue->p_back = queue->length = 0;
-    queue->size = size + 1;
-    queue->items = malloc(sizeof(ItemQueue) * queue->size);
+int sq_is_full(SList *queue) { return sl_is_full(queue); }
 
-    if (!queue->items){
-        free(queue);
-        return NULL;
-    }
+int sq_enqueue(SList *queue, SlItem *new_item) {
 
-    return queue;
+    return sl_append(queue, new_item);
 }
 
-int queue_is_empty(Queue *queue){
+SlItem *sq_dequeue(SList *queue) { return sl_remove(queue); }
 
-    return queue->p_front == queue->p_back;
+SlItem *sq_peek(SList *queue) {
+
+    return !sq_is_empty(queue) ? queue->items[queue->p_front] : NULL;
 }
 
-int queue_is_full(Queue *queue){
+int sq_offset(SList *queue, void *elmnt, ICOMPARATOR) {
 
-    return divmodular(queue->p_back + 1, queue->size) == queue->p_front;
-}
-
-void queue_clear(Queue *queue){
-
-    for (int i = queue->p_front; i != queue->p_back; i = divmodular(i + 1, queue->size)){
-        free(queue->items[i].data);
-        queue->items[i].data = NULL;
-    }
-
-    queue->p_front = queue->p_back = 0;
-}
-
-int queue_enqueue(Queue *queue, void *data){
-
-    if (queue_is_full(queue))
-        return 0;
-
-    queue->items[queue->p_back].data = data;
-    queue->p_back = divmodular(queue->p_back + 1, queue->size);
-    queue->length++;
-
-    return 1;
-}
-
-void *queue_dequeue(Queue *queue){
-
-    if (queue_is_empty(queue))
-        return NULL;
-
-    void *data = queue->items[queue->p_front].data;
-    queue->items[queue->p_front].data = NULL;
-    queue->p_front = divmodular(queue->p_front + 1, queue->size);
-    queue->length--;
-    
-    return data;
-}
-
-void *queue_peek(Queue *queue){
-
-    if (queue_is_empty(queue))
-        return NULL;
-
-    return queue->items[queue->p_front].data;
-}
-
-int queue_find(Queue *queue, void *value, ICOMPARATOR){
-    
-    if (queue_is_empty(queue))
-        return -1;
-
-    int i = queue->p_front;
-
-    while (i != queue->p_back && comparator(value, queue->items[i].data))
-        i = divmodular(i + 1, queue->size);
-
-    if (i == queue->p_back)
-        return -1;
-
-    return i >= queue->p_front ? i - queue->p_front : queue->size - queue->p_front + i;
+    return sl_index_of(queue, elmnt, comparator);
 }
