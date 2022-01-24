@@ -5,22 +5,25 @@
 
 #include "sort.h"
 
-#define CALMIDDLE(v) ((v) / 2)
-
 /**
  * Sort array with classification Merge Sort.
- * @param arr source array.
- * @param n_member member number.
- * @param size_m size of each member.
+ *
+ * @param arr Source array.
+ * @param n_member Member of numbers.
+ * @param size_m Size of each member.
  * @param comparator Function comparator.
  */
 void merge_sort(void *arr, size_t n_member, size_t size_m, ICOMPARATOR);
 
 /**
  * Sort partition.
- * @param arr source array.
- * @param n_member member number.
- * @param size_m size of each member.
+ *
+ * @param arr Source array.
+ * @param right_s Starting index of the right partition.
+ * @param n_member Member of numbers.
+ * @param size_m Size of each member.
+ * @param arr_aux Temporary storage array.
  * @param comparator Function comparator.
  */
-void merge_partition(void *arr, size_t n_member, size_t size_m, ICOMPARATOR);
+void merge_partition(void *arr, size_t right_s, size_t n_member, size_t size_m,
+                     void *arr_aux, ICOMPARATOR);
