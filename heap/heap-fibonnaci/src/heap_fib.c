@@ -6,7 +6,6 @@
 #include "../include/heap_fib.h"
 #include "../../../includes/istructure_utils.h"
 #include "stdlib.h"
-#include "string.h"
 
 HeapFib *heapf_new() {
 
@@ -20,7 +19,7 @@ HeapFib *heapf_new() {
     return heap;
 }
 
-heapf_is_empty(HeapFib *heap) { return heap->min_item == NULL; }
+int heapf_is_empty(HeapFib *heap) { return heap->min_item == NULL; }
 
 int heapf_insert(HeapFib *heap, HeapFibItem *new_item, ICOMPARATOR) {
 
@@ -31,7 +30,8 @@ int heapf_insert(HeapFib *heap, HeapFibItem *new_item, ICOMPARATOR) {
     new_item->mark = new_item->degree = 0;
 
     if (!heapf_is_empty(heap)) {
-        cdll_item_append(&new_item->cdll_item, &heap->min_item->cdll_item);
+        cdll_item_append(&new_item->cdll_item,
+                         heap->min_item->cdll_item.previous);
     } else {
         cdll_item_link(&new_item->cdll_item, &new_item->cdll_item,
                        &new_item->cdll_item);
@@ -65,18 +65,18 @@ HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR) {
         }
     }
 
-    if (cdll_item_is_alone(&min_item->cdll_item)) {
-        heap->min_item = NULL;
-    } else {
-        heap->min_item = (HeapFibItem *)GETSTRUCTFROM(min_item->cdll_item.next,
-                                                      HeapFibItem, cdll_item);
+    heap->min_item =
+        cdll_item_is_alone(&min_item->cdll_item)
+            ? NULL
+            : (HeapFibItem *)GETSTRUCTFROM(min_item->cdll_item.next,
+                                           HeapFibItem, cdll_item);
 
-        cdll_item_remove(&min_item->cdll_item);
-        min_item->degree = min_item->mark = 0;
-        min_item->child = NULL;
+    min_item->mark = min_item->degree = 0;
+    min_item->child = NULL;
+    cdll_item_remove(&min_item->cdll_item);
 
+    if (!heapf_is_empty(heap))
         heapf_consolidate(heap, comparator);
-    }
 
     --heap->length;
 
@@ -91,41 +91,50 @@ void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
         return;
 
     HeapFibItem **hpf_list = calloc(heap->length, sizeof(HeapFibItem *));
-    // memset(0, hpf_list, sizeof(HeapFibItem *) * heap->length);
-
     hpf_list[heap->min_item->degree] = heap->min_item;
 
-    for (HeapFibItem *hpf_item = (HeapFibItem *)GETSTRUCTFROM(
-             heap->min_item->cdll_item.next, HeapFibItem, cdll_item);
-         hpf_item != heap->min_item;
-         hpf_item = (HeapFibItem *)GETSTRUCTFROM(hpf_item->cdll_item.next,
-                                                 HeapFibItem, cdll_item)) {
+    HeapFibItem *hpf_item = (HeapFibItem *)GETSTRUCTFROM(
+        heap->min_item->cdll_item.next, HeapFibItem, cdll_item);
 
+    while (hpf_item != heap->min_item) {
         HeapFibItem *hpfi_a = hpf_item, *hpfi_b = hpf_list[hpfi_a->degree];
 
         while (hpfi_b) {
+
             hpf_list[hpfi_a->degree] = NULL;
 
-            if (comparator(hpfi_a, hpfi_b) >= 0) {
+            if (comparator(hpfi_a, hpfi_b) > 0) {
                 HeapFibItem *hpfi_aux = hpfi_a;
                 hpfi_a = hpfi_b;
                 hpfi_b = hpfi_aux;
             }
 
             cdll_item_remove(&hpfi_b->cdll_item);
+
             if (hpfi_a->child) {
-                cdll_item_append(&hpfi_b->cdll_item, &hpfi_a->child->cdll_item);
+                cdll_item_append(&hpfi_b->cdll_item,
+                                 hpfi_a->child->cdll_item.previous);
             } else {
                 cdll_item_link(&hpfi_b->cdll_item, &hpfi_b->cdll_item,
                                &hpfi_b->cdll_item);
                 hpfi_a->child = hpfi_b;
             }
 
-            hpfi_b = hpf_list[hpfi_a->degree];
+            hpfi_b->father = hpfi_a;
             ++hpfi_a->degree;
+            hpfi_b = hpf_list[hpfi_a->degree];
         }
+
         hpf_list[hpfi_a->degree] = hpfi_a;
+
+        if (comparator(heap->min_item, hpfi_a) > 0)
+            heap->min_item = hpfi_a;
+
+        hpf_item = (HeapFibItem *)GETSTRUCTFROM(hpfi_a->cdll_item.next,
+                                                HeapFibItem, cdll_item);
     }
+
+    free(hpf_list);
 }
 
 HeapFibItem *heapf_peek(HeapFib *heap) {

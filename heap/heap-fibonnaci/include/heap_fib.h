@@ -15,6 +15,7 @@ struct _HeapFibItem {
     struct _DllItem cdll_item;
     int mark;
     size_t degree;
+    int value;
 };
 
 struct _HeapFib {

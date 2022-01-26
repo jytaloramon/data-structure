@@ -1,9 +1,11 @@
 COMPILER=gcc
 FLAGS=-Wall
 
-SOURCEPATH=src
-SOURCEINCLUDE=include
+SRCPATH=src
+SRCINCLUDE=include
 BUILDPATH=build
+
+SRCPROJECTLIST=../../list
 
 # General use
 
@@ -16,12 +18,17 @@ clear: $(BUILDPATH)
 clear_build: $(BUILDPATH)
 	rm -rf $(BUILDPATH)/*
 
-heap_fib.o: $(SOURCEINCLUDE)/heap.h $(SOURCEPATH)/heap_fib.c
-	$(COMPILER) $(FLAGS) $(SOURCEPATH)/heap_fib.c -c
+
+heap_fib.o: $(SRCPATH)/heap_fib.c
+	$(COMPILER) $(FLAGS) $(SRCPATH)/heap_fib.c -c
 	mv heap_fib.o $(BUILDPATH)/
 
-main_heap_fib: $(BUILDPATH) $(SOURCEPATH)/main_heap_fib.c heap_fib.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/heap.o \
-		$(SOURCEPATH)/main_heap_fib.c -o main_heap_fib
+circular_doubly_linked_list.o: $(SRCPROJECTLIST)/$(SRCPATH)/circular_doubly_linked_list.c
+	$(COMPILER) $(FLAGS) $(SRCPROJECTLIST)/$(SRCPATH)/circular_doubly_linked_list.c -c
+	mv circular_doubly_linked_list.o $(BUILDPATH)/
+
+main_heap_fib: $(BUILDPATH) circular_doubly_linked_list.o \
+		heap_fib.o $(SRCPATH)/main_heap_fib.c
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/circular_doubly_linked_list.o \
+		$(BUILDPATH)/heap_fib.o $(SRCPATH)/main_heap_fib.c -o main_heap_fib
 	mv main_heap_fib $(BUILDPATH)/
-	
