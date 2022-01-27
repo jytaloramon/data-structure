@@ -142,7 +142,7 @@ HeapFibItem *heapf_peek(HeapFib *heap) {
     return heapf_is_empty(heap) ? NULL : heap->min_item;
 }
 
-int heapf_union(HeapFib *heap, HeapFib *heap_from) {
+int heapf_union(HeapFib *heap, HeapFib *heap_from, ICOMPARATOR) {
 
     if (!heap || !heap_from)
         return 0;
@@ -150,13 +150,17 @@ int heapf_union(HeapFib *heap, HeapFib *heap_from) {
     if (heapf_is_empty(heap_from))
         return 1;
 
-    if (heapf_is_empty(heap)) {
-        heap->min_item = heap_from->min_item;
-    } else {
+    HeapFibItem *min_global = heap_from->min_item;
+
+    if (!heapf_is_empty(heap)) {
         cdll_item_join(&heap->min_item->cdll_item,
                        &heap_from->min_item->cdll_item);
+
+        if (comparator(heap->min_item, min_global) > 0)
+            min_global = heap->min_item;
     }
 
+    heap->min_item = min_global;
     heap->length += heap_from->length;
 
     return 1;

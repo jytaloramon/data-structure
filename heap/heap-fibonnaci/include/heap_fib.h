@@ -87,6 +87,7 @@ HeapFibItem *heapf_peek(HeapFib *heap);
  * 
  * @param heap HeapFib instance.
  * @param heap_from HeapFib instance.
+ * @param comparator Function comparator.
  * @return int Or 1 on success or 0 on failure.
  */
-int heapf_union(HeapFib *heap, HeapFib *heap_from);
+int heapf_union(HeapFib *heap, HeapFib *heap_from, ICOMPARATOR);
