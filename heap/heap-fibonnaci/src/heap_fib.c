@@ -50,15 +50,15 @@ HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR) {
     if (heapf_is_empty(heap))
         return NULL;
 
-    HeapFibItem *min_item = heap->min_item;
+    HeapFibItem *min_item_rm = heap->min_item;
 
-    if (min_item->child) {
-        cdll_item_join(&min_item->cdll_item, &min_item->child->cdll_item);
+    if (min_item_rm->child) {
+        cdll_item_join(&min_item_rm->cdll_item, &min_item_rm->child->cdll_item);
 
-        min_item->child->father = NULL;
+        min_item_rm->child->father = NULL;
         for (HeapFibItem *hpf_item = (HeapFibItem *)GETSTRUCTFROM(
-                 min_item->child->cdll_item.next, HeapFibItem, cdll_item);
-             hpf_item != min_item->child;
+                 min_item_rm->child->cdll_item.next, HeapFibItem, cdll_item);
+             hpf_item != min_item_rm->child;
              hpf_item = (HeapFibItem *)GETSTRUCTFROM(hpf_item->cdll_item.next,
                                                      HeapFibItem, cdll_item)) {
             hpf_item->father = NULL;
@@ -66,21 +66,21 @@ HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR) {
     }
 
     heap->min_item =
-        cdll_item_is_alone(&min_item->cdll_item)
+        cdll_item_is_alone(&min_item_rm->cdll_item)
             ? NULL
-            : (HeapFibItem *)GETSTRUCTFROM(min_item->cdll_item.next,
+            : (HeapFibItem *)GETSTRUCTFROM(min_item_rm->cdll_item.next,
                                            HeapFibItem, cdll_item);
 
-    min_item->mark = min_item->degree = 0;
-    min_item->child = NULL;
-    cdll_item_remove(&min_item->cdll_item);
+    min_item_rm->mark = min_item_rm->degree = 0;
+    min_item_rm->child = NULL;
+    cdll_item_remove(&min_item_rm->cdll_item);
 
     if (!heapf_is_empty(heap))
         heapf_consolidate(heap, comparator);
 
     --heap->length;
 
-    return min_item;
+    return min_item_rm;
 }
 
 int *heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
@@ -142,4 +142,22 @@ HeapFibItem *heapf_peek(HeapFib *heap) {
     return heapf_is_empty(heap) ? NULL : heap->min_item;
 }
 
-int heapf_union(HeapFib *heap, HeapFib *heap_from) { return 0; }
+int heapf_union(HeapFib *heap, HeapFib *heap_from) {
+
+    if (!heap || !heap_from)
+        return 0;
+
+    if (heapf_is_empty(heap_from))
+        return 1;
+
+    if (heapf_is_empty(heap)) {
+        heap->min_item = heap_from->min_item;
+    } else {
+        cdll_item_join(&heap->min_item->cdll_item,
+                       &heap_from->min_item->cdll_item);
+    }
+
+    heap->length += heap_from->length;
+
+    return 1;
+}
