@@ -85,6 +85,20 @@ HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR) {
 
 int *heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
 
+int heapf_decrease_key(HeapFib *heap, HeapFibItem *up_item, ICOMPARATOR) {
+
+    if (!up_item)
+        return 0;
+
+    if (up_item->father && comparator(up_item->father, up_item) > 0)
+        heapf_cut(heap, up_item);
+
+    if (comparator(heap->min_item, up_item) > 0)
+        heap->min_item = up_item;
+
+    return 1;
+}
+
 void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
 
     if (heapf_is_empty(heap))
@@ -137,9 +151,83 @@ void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
     free(hpf_list);
 }
 
+void heapf_cut(HeapFib *heap, HeapFibItem *up_item) {
+
+    if (!up_item)
+        return;
+
+    HeapFibItem *item_r = up_item, *father = item_r->father;
+
+    while (father) {
+        if (cdll_item_is_alone(&item_r->cdll_item)) {
+            father->child = NULL;
+        } else {
+
+            if (&father->child->cdll_item == &item_r->cdll_item) {
+                father->child = (HeapFibItem *)GETSTRUCTFROM(
+                    item_r->cdll_item.next, HeapFibItem, cdll_item);
+            }
+
+            cdll_item_remove(&item_r->cdll_item);
+        }
+
+        item_r->father = NULL;
+        item_r->mark = 0;
+        cdll_item_append(&item_r->cdll_item,
+                         heap->min_item->cdll_item.previous);
+        --father->degree;
+
+        if (!father->mark) {
+            father->mark = 1;
+            father = NULL;
+        } else {
+            item_r = father;
+            father = item_r->father;
+        }
+    }
+}
+
 HeapFibItem *heapf_peek(HeapFib *heap) {
 
     return heapf_is_empty(heap) ? NULL : heap->min_item;
+}
+
+HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR) {
+
+    if (heapf_is_empty(heap))
+        return NULL;
+
+    HeapFibItem *item_temp = NULL;
+    int ls = 0, le = 0;
+    DllItem *lists[heap->length];
+    lists[le++] = &heap->min_item->cdll_item;
+
+    while (ls < le) {
+
+        item_temp =
+            (HeapFibItem *)GETSTRUCTFROM(lists[ls++], HeapFibItem, cdll_item);
+
+        if (comparator(elmnt, item_temp) == 0)
+            return item_temp;
+
+        if (item_temp->child)
+            lists[le++] = &item_temp->child->cdll_item;
+
+        for (HeapFibItem *item_r = (HeapFibItem *)GETSTRUCTFROM(
+                 item_temp->cdll_item.next, HeapFibItem, cdll_item);
+             item_r != item_temp;
+             item_r = (HeapFibItem *)GETSTRUCTFROM(item_r->cdll_item.next,
+                                                   HeapFibItem, cdll_item)) {
+
+            if (comparator(elmnt, item_r) == 0)
+                return item_r;
+
+            if (item_r->child)
+                lists[le++] = &item_r->child->cdll_item;
+        }
+    }
+
+    return NULL;
 }
 
 int heapf_union(HeapFib *heap, HeapFib *heap_from, ICOMPARATOR) {
