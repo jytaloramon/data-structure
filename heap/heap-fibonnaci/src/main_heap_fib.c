@@ -16,39 +16,29 @@ int main(int argc, char const *argv[]) {
 
     HeapFib *heapf = heapf_new();
 
-    HeapFibItem a = {.value = 5}, b = {.value = 10}, c = {.value = 1},
-                d = {.value = 100}, e = {.value = 0}, f = {.value = 8};
+    HeapFibItem heapf_items[10] = {{.value = 10},  {.value = 20}, {.value = 40},
+                                   {.value = 35},  {.value = 50}, {.value = 15},
+                                   {.value = 100}, {.value = 95}, {.value = 2},
+                                   {.value = 41}};
 
-    heapf_insert(heapf, &a, comp);
-    printf("a inserido\n");
-    heapf_show(heapf);
-
-    heapf_insert(heapf, &b, comp);
-    printf("b inserido\n");
-    heapf_show(heapf);
-
-    heapf_insert(heapf, &c, comp);
-    printf("c inserido\n");
-    heapf_show(heapf);
-
-    heapf_insert(heapf, &d, comp);
-    printf("d inserido\n");
-    heapf_show(heapf);
-
-    heapf_insert(heapf, &e, comp);
-    printf("e inserido\n");
-    heapf_show(heapf);
-
-    heapf_insert(heapf, &f, comp);
-    printf("f inserido\n");
+    heapf_insert(heapf, &heapf_items[0], comp);
+    heapf_insert(heapf, &heapf_items[1], comp);
+    heapf_insert(heapf, &heapf_items[2], comp);
+    heapf_insert(heapf, &heapf_items[3], comp);
+    heapf_insert(heapf, &heapf_items[4], comp);
+    heapf_insert(heapf, &heapf_items[5], comp);
     heapf_show(heapf);
 
     heapf_extract_min(heapf, comp);
-    printf("MIN REMOVE\n");
+    heapf_show(heapf);
+
+    heapf_insert(heapf, &heapf_items[6], comp);
+    heapf_insert(heapf, &heapf_items[7], comp);
+    heapf_insert(heapf, &heapf_items[8], comp);
+    heapf_insert(heapf, &heapf_items[9], comp);
     heapf_show(heapf);
 
     heapf_extract_min(heapf, comp);
-    printf("MIN REMOVE\n");
     heapf_show(heapf);
 
     return 0;
@@ -84,7 +74,8 @@ void heapf_show(HeapFib *heap) {
 
         heapf_temp->father ? printf("Father: %d\n", heapf_temp->father->value)
                            : printf("Father: root\n");
-        printf("%d, ", heapf_temp->value);
+        printf("(%d | %lu | %d), ", heapf_temp->value, heapf_temp->degree,
+               heapf_temp->is_marked);
 
         if (heapf_temp->child)
             lists[le++] = &heapf_temp->child->cdll_item;
@@ -95,7 +86,8 @@ void heapf_show(HeapFib *heap) {
              hpf_r = (HeapFibItem *)GETSTRUCTFROM(hpf_r->cdll_item.next,
                                                   HeapFibItem, cdll_item)) {
 
-            printf("%d, ", hpf_r->value);
+            printf("(%d | %lu | %d), ", hpf_r->value, hpf_r->degree,
+                   hpf_r->is_marked);
 
             if (hpf_r->child)
                 lists[le++] = &hpf_r->child->cdll_item;
