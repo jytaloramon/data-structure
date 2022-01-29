@@ -13,7 +13,7 @@ typedef struct _HeapFibItem HeapFibItem;
 struct _HeapFibItem {
     struct _HeapFibItem *father, *child;
     struct _DllItem cdll_item;
-    int mark;
+    int is_marked;
     size_t degree;
     int value;
 };
