@@ -104,52 +104,55 @@ void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
     if (heapf_is_empty(heap))
         return;
 
-    HeapFibItem **hpf_list = calloc(heap->length, sizeof(HeapFibItem *)),
-                *hpf_imin_s = heap->min_item;
-    hpf_list[hpf_imin_s->degree] = hpf_imin_s;
+    HeapFibItem *item_s = heap->min_item,
+                **items_dg = calloc(heap->length, sizeof(HeapFibItem *)),
+                *item_r = (HeapFibItem *)GETSTRUCTFROM(item_s->cdll_item.next,
+                                                       HeapFibItem, cdll_item),
+                *item_a = NULL, *item_b = NULL, *item_n = NULL;
 
-    HeapFibItem *hpf_item = (HeapFibItem *)GETSTRUCTFROM(
-        heap->min_item->cdll_item.next, HeapFibItem, cdll_item);
+    items_dg[item_s->degree] = item_s;
 
-    while (hpf_item != hpf_imin_s) {
-        HeapFibItem *hpfi_a = hpf_item, *hpfi_b = hpf_list[hpfi_a->degree];
+    while (item_r != item_s) {
+        item_a = item_r;
+        item_b = items_dg[item_a->degree];
+        item_n = (HeapFibItem *)GETSTRUCTFROM(item_a->cdll_item.next,
+                                              HeapFibItem, cdll_item);
 
-        while (hpfi_b) {
+        while (item_b) {
 
-            hpf_list[hpfi_a->degree] = NULL;
+            items_dg[item_a->degree] = NULL;
 
-            if (comparator(hpfi_a, hpfi_b) > 0) {
-                HeapFibItem *hpfi_aux = hpfi_a;
-                hpfi_a = hpfi_b;
-                hpfi_b = hpfi_aux;
+            if (comparator(item_a, item_b) > 0) {
+                HeapFibItem *item_aux = item_a;
+                item_a = item_b;
+                item_b = item_aux;
             }
 
-            cdll_item_remove(&hpfi_b->cdll_item);
+            cdll_item_remove(&item_b->cdll_item);
 
-            if (hpfi_a->child) {
-                cdll_item_append(&hpfi_b->cdll_item,
-                                 hpfi_a->child->cdll_item.previous);
+            if (item_a->child) {
+                cdll_item_append(&item_b->cdll_item,
+                                 item_a->child->cdll_item.previous);
             } else {
-                cdll_item_link(&hpfi_b->cdll_item, &hpfi_b->cdll_item,
-                               &hpfi_b->cdll_item);
-                hpfi_a->child = hpfi_b;
+                cdll_item_link(&item_b->cdll_item, &item_b->cdll_item,
+                               &item_b->cdll_item);
+                item_a->child = item_b;
             }
 
-            hpfi_b->father = hpfi_a;
-            ++hpfi_a->degree;
-            hpfi_b = hpf_list[hpfi_a->degree];
+            item_b->father = item_a;
+            ++item_a->degree;
+            item_b = items_dg[item_a->degree];
         }
 
-        hpf_list[hpfi_a->degree] = hpfi_a;
+        items_dg[item_a->degree] = item_a;
 
-        if (comparator(heap->min_item, hpfi_a) > 0)
-            heap->min_item = hpfi_a;
+        if (comparator(heap->min_item, item_a) > 0)
+            heap->min_item = item_a;
 
-        hpf_item = (HeapFibItem *)GETSTRUCTFROM(hpfi_a->cdll_item.next,
-                                                HeapFibItem, cdll_item);
+        item_r = item_n;
     }
 
-    free(hpf_list);
+    free(items_dg);
 }
 
 void heapf_cut(HeapFib *heap, HeapFibItem *up_item) {
