@@ -34,6 +34,17 @@ main_static_list: static_list.o arithmetic.o $(SRCPATH)/main_static_list.c
 	mv main_static_list $(BUILDPATH)/
 	
 
+# Linked List
+
+linked_list.o: $(BUILDPATH) $(SRCPATH)/linked_list.c
+	$(COMPILER) $(FLAGS) $(SRCPATH)/linked_list.c -c
+	mv linked_list.o $(BUILDPATH)/
+
+main_linked_list: linked_list.o $(SRCPATH)/main_linked_list.c
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/linked_list.o \
+		$(SRCPATH)/main_linked_list.c -o main_linked_list
+	mv main_linked_list $(BUILDPATH)/
+
 # Doubly Linked List
 
 doubly_linked_list.o: $(BUILDPATH) $(SRCPATH)/doubly_linked_list.c
