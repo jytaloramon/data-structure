@@ -46,8 +46,8 @@ int ll_insert_at(LList *ll, LlItem *new_item, size_t index) {
         ll->head.next = new_item;
     } else {
         LlItem *item_r = ll->head.next;
-        for (size_t i = 1; i < index; ++i, item_r = item_r->next)
-            ;
+        for (size_t i = 1; i < index; ++i, item_r = item_r->next);
+        
         ll_item_append(new_item, item_r);
     }
 
@@ -63,6 +63,10 @@ LlItem *ll_remove(LList *ll) {
 
     LlItem *rm_item = ll->head.next;
     ll_item_remove_next(&ll->head);
+
+    if (ll_is_empty(ll))
+        ll->rear = &ll->head;
+
     --ll->length;
 
     return rm_item;
@@ -77,11 +81,14 @@ LlItem *ll_remove_at(LList *ll, size_t index) {
         return ll_remove(ll);
 
     LlItem *item_r = ll->head.next;
-    for (size_t i = 1; i < index; ++i, item_r = item_r->next)
-        ;
+    for (size_t i = 1; i < index; ++i, item_r = item_r->next);
 
     LlItem *rm_item = item_r->next;
     ll_item_remove_next(item_r);
+
+    if (!item_r->next)
+        ll->rear = item_r;
+
     --ll->length;
 
     return rm_item;
@@ -89,17 +96,17 @@ LlItem *ll_remove_at(LList *ll, size_t index) {
 
 LlItem *ll_find(LList *ll, void *elmnt, ICOMPARATOR) {
 
-    return ll_item_find(ll->head.next, ll->rear->next, elmnt, comparator);
+    return ll_item_find(ll->head.next, NULL, elmnt, comparator);
 }
 
 size_t ll_count(LList *ll, void *elmnt, ICOMPARATOR) {
 
-    return ll_item_count(ll->head.next, ll->rear->next, elmnt, comparator);
+    return ll_item_count(ll->head.next, NULL, elmnt, comparator);
 }
 
 int ll_index_of(LList *ll, void *elmnt, ICOMPARATOR) {
 
-    return ll_item_offset(ll->head.next, ll->rear->next, elmnt, comparator);
+    return ll_item_offset(ll->head.next, NULL, elmnt, comparator);
 }
 
 int ll_merge(LList *ll1, LList *ll2) {
@@ -149,7 +156,7 @@ LlItem *ll_item_find(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR) {
     if (!item_s)
         return NULL;
 
-    for (LlItem *item_r = item_s; item_s != item_e; item_r = item_r->next) {
+    for (LlItem *item_r = item_s; item_r != item_e; item_r = item_r->next) {
         if (comparator(elmnt, item_r) == 0)
             return item_r;
     }
@@ -164,7 +171,7 @@ size_t ll_item_count(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR) {
 
     size_t count = 0;
 
-    for (LlItem *item_r = item_s; item_s != item_e; item_r = item_r->next)
+    for (LlItem *item_r = item_s; item_r != item_e; item_r = item_r->next)
         count += comparator(elmnt, item_r) == 0 ? 1 : 0;
 
     return count;
@@ -177,7 +184,7 @@ int ll_item_offset(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR) {
 
     size_t offset = 0;
 
-    for (LlItem *item_r = item_s; item_s != item_e; item_r = item_r->next) {
+    for (LlItem *item_r = item_s; item_r != item_e; item_r = item_r->next) {
         if (comparator(elmnt, item_r) == 0)
             return offset;
 
