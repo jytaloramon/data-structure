@@ -37,7 +37,7 @@ CdlList *cdll_new();
 int cdll_is_empty(CdlList *cdll);
 
 /**
- * Add an element before the list first item.
+ * Add an item before the list first item.
  * @param cdll CdlList pointer.
  * @param new_item Item for insertion.
  * @return Or 1 if added or 0 if not added.
@@ -45,7 +45,7 @@ int cdll_is_empty(CdlList *cdll);
 int cdll_append(CdlList *cdll, DllItem *new_item);
 
 /**
- * Remove the first element.
+ * Remove the first item from the list.
  * @param cdll CdlList pointer.
  * @return The item removed, or NULL if list is empty.
  */

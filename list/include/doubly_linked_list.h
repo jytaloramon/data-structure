@@ -20,8 +20,8 @@ typedef struct _DlList DlList;
  * attr: rear - Pointer to the last element in the list.
  */
 struct _DlList {
-    size_t length;
     struct _DllItem head, *rear;
+    size_t length;
 };
 
 /**
@@ -38,7 +38,7 @@ DlList *dll_new();
 int dll_is_empty(DlList *dll);
 
 /**
- * Add an element before the list first item.
+ * Add an item to the end of the list.
  * @param dll DlList pointer.
  * @param new_item Item for insertion.
  * @return Or 1 if added or 0 if not added.
@@ -46,7 +46,7 @@ int dll_is_empty(DlList *dll);
 int dll_append(DlList *dll, DllItem *new_item);
 
 /**
- * Adds an element at the specified position.
+ * Adds an item at the specified position.
  * @param dll DlList pointer.
  * @param new_item Item for insertion.
  * @param index Insertion position.
@@ -55,14 +55,14 @@ int dll_append(DlList *dll, DllItem *new_item);
 int dll_insert_at(DlList *dll, DllItem *new_item, size_t index);
 
 /**
- * Remove the first element.
+ * Remove the first item from the list.
  * @param dll DlList pointer.
  * @return The item removed, or NULL if list is empty.
  */
 DllItem *dll_remove(DlList *dll);
 
 /**
- * Remove the element at the specified position.
+ * Remove the item at the specified position.
  * @param dll DlList pointer.
  * @param index Position of the removed element.
  *      Value -1 to remove the last element.
@@ -71,7 +71,7 @@ DllItem *dll_remove(DlList *dll);
 DllItem *dll_remove_at(DlList *dll, size_t index);
 
 /**
- * Remove the last element.
+ * Remove the last item.
  * @param dll DlList pointer.
  * @return The item removed, or NULL if list is empty.
  */

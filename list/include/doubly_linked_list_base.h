@@ -5,12 +5,12 @@
 
 /**
  * Define the prototype of the struct.
- * struct _ItemList ItemList.
+ * struct _DllItem DllItem.
  */
 typedef struct _DllItem DllItem;
 
 /**
- * struct _ItemList.
+ * struct _DllItem.
  * attr: previous - Pointer to the previous element in the chain.
  * attr: next - Pointer to the next element in the chain.
  */
