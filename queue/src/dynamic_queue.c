@@ -1,110 +1,28 @@
 /**
  * @author Ytalo Ramon
  * @date   12/06/2021
-*/
+ */
 
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
 #include "../include/dynamic_queue.h"
+#include "stdlib.h"
 
-Queue *queue_new(){
+LList *dq_new() { return ll_new(); }
 
-    Queue *queue = malloc(sizeof(Queue));
+int dq_is_empty(LList *queue) { return ll_is_empty(queue); }
 
-    if (!queue)
-        return NULL;
+int dq_enqueue(LList *queue, LlItem *new_item) {
 
-    queue->head.next = NULL;
-    queue->back = &queue->head;
-    queue->length = 0;
-
-    return queue;
+    return ll_append(queue, new_item);
 }
 
-ItemQueue *queue_new_item(void *data){
-    
-    ItemQueue *item = malloc(sizeof(ItemQueue));
+LlItem *dq_dequeue(LList *queue) { return ll_remove(queue); }
 
-    if (!item)
-        return NULL;
+LlItem *dq_peek(LList *queue) {
 
-    item->data = data;
-    item->next = NULL;
-
-    return item;
+    return !dq_is_empty(queue) ? queue->head.next : NULL;
 }
 
-int queue_is_empty(Queue *queue){
+int dq_offset(LList *queue, void *elmnt, ICOMPARATOR) {
 
-    return queue->head.next == NULL;
-}
-
-void queue_clear(Queue *queue){
-
-    for (ItemQueue *item_r = queue->head.next, *item_n = NULL; item_r; item_r = item_n){
-        item_n = item_r->next;
-        free(item_r->data);
-        free(item_r);
-    }
-
-    queue->head.next = NULL;
-    queue->back = &queue->head;
-    queue->length = 0;
-}
-
-int queue_enqueue(Queue *queue, void *data){
-
-    ItemQueue *item = queue_new_item(data);
-
-    if (!item)
-        return 0;
-
-    queue->back->next = item;
-    queue->back = queue->back->next;
-    queue->length++;
-
-    return 1;
-}
-
-void *queue_dequeue(Queue *queue){
-
-    if (queue_is_empty(queue))
-        return NULL;
-
-    ItemQueue *item = queue->head.next;
-    void *data = item->data;
-    queue->head.next = item->next;
-    queue->length--;
-    
-    free(item);
-
-    if (queue_is_empty(queue))
-        queue->back = &queue->head;
-
-    return data;
-}
-
-void *queue_peek(Queue *queue){
-
-    if (queue_is_empty(queue))
-        return NULL;
-
-    return queue->head.next->data;
-}
-
-int queue_find(Queue *queue, void *value, ICOMPARATOR){
-
-    if (queue_is_empty(queue))
-        return -1;
-
-    ItemQueue *item_r = queue->head.next;
-    int i = 0;
-
-    while (item_r && comparator(value, item_r->data)){
-        item_r = item_r->next;
-        i++;
-    }
-
-    return item_r ? i : -1;
+    return ll_index_of(queue, elmnt, comparator);
 }

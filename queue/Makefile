@@ -1,11 +1,12 @@
 COMPILER=gcc
 FLAGS=-Wall
 
-SOURCEPATH=src
-SOURCEINCLUDE=include
+SRCPATH=src
+SRCINCLUDE=include
 BUILDPATH=build
 
-SRCMATHPATH=../math
+SRCPROJECTMATH=../math
+SRCPROJECTLIST=../list
 
 # General use
 
@@ -20,24 +21,35 @@ clear_build: $(BUILDPATH)
 
 # Static Queue
 
-arithmetic.o: $(BUILDPATH) $(SRCMATHPATH)/$(SOURCEINCLUDE)/arithmetic.h $(SRCMATHPATH)/$(SOURCEPATH)/arithmetic.c
-	$(COMPILER) $(FLAGS) $(SRCMATHPATH)/$(SOURCEPATH)/arithmetic.c -c
+arithmetic.o: $(BUILDPATH) $(SRCPROJECTMATH)/$(SRCPATH)/arithmetic.c
+	$(COMPILER) $(FLAGS) $(SRCPROJECTMATH)/$(SRCPATH)/arithmetic.c -c
 	mv arithmetic.o $(BUILDPATH)/
 
-static_queue.o: $(BUILDPATH) $(SOURCEINCLUDE)/static_queue.h $(SOURCEPATH)/static_queue.c
-	$(COMPILER) $(FLAGS) $(SOURCEPATH)/static_queue.c -c
+static_list.o: $(BUILDPATH) $(SRCPROJECTLIST)/$(SRCPATH)/static_list.c
+	$(COMPILER) $(FLAGS) $(SRCPROJECTLIST)/$(SRCPATH)/static_list.c -c
+	mv static_list.o $(BUILDPATH)/
+
+static_queue.o: $(BUILDPATH) $(SRCPATH)/static_queue.c
+	$(COMPILER) $(FLAGS) $(SRCPATH)/static_queue.c -c
 	mv static_queue.o $(BUILDPATH)/
 
-main_static_queue: $(BUILDPATH) $(SOURCEPATH)/main_static_queue.c static_queue.o arithmetic.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/static_queue.o $(BUILDPATH)/arithmetic.o $(SOURCEPATH)/main_static_queue.c -o main_static_queue
+main_static_queue: static_list.o arithmetic.o static_queue.o $(SRCPATH)/main_static_queue.c 
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/arithmetic.o $(BUILDPATH)/static_list.o  \
+		$(BUILDPATH)/static_queue.o  $(SRCPATH)/main_static_queue.c -o main_static_queue
 	mv main_static_queue $(BUILDPATH)/
 
 # Dynamic Queue
 
-dynamic_queue.o: $(BUILDPATH) $(SOURCEINCLUDE)/dynamic_queue.h $(SOURCEPATH)/dynamic_queue.c
-	$(COMPILER) $(FLAGS) $(SOURCEPATH)/dynamic_queue.c -c
+linked_list.o: $(BUILDPATH) $(SRCPROJECTLIST)/$(SRCPATH)/linked_list.c
+	$(COMPILER) $(FLAGS) $(SRCPROJECTLIST)/$(SRCPATH)/linked_list.c -c
+	mv linked_list.o $(BUILDPATH)/
+
+dynamic_queue.o: $(BUILDPATH) $(SRCPATH)/dynamic_queue.c
+	$(COMPILER) $(FLAGS) $(SRCPATH)/dynamic_queue.c -c
 	mv dynamic_queue.o $(BUILDPATH)/
 
-main_dynamic_queue: $(BUILDPATH) $(SOURCEPATH)/main_dynamic_queue.c dynamic_queue.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/dynamic_queue.o $(SOURCEPATH)/main_dynamic_queue.c -o main_dynamic_queue
+main_dynamic_queue: $(BUILDPATH) linked_list.o dynamic_queue.o \
+		$(SRCPATH)/main_dynamic_queue.c 
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/linked_list.o $(BUILDPATH)/dynamic_queue.o \
+		$(SRCPATH)/main_dynamic_queue.c -o main_dynamic_queue
 	mv main_dynamic_queue $(BUILDPATH)/
