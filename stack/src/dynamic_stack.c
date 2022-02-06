@@ -4,68 +4,25 @@
  */
 
 #include "../include/dynamic_stack.h"
-#include "stdio.h"
 #include "stdlib.h"
 
-Stack *stack_new() {
+LList *dst_new() { return ll_new(); }
 
-    Stack *stack = malloc(sizeof(Stack));
+int dst_is_empty(LList *stack) { return ll_is_empty(stack); }
 
-    if (!stack)
-        return NULL;
+int dst_push(LList *stack, LlItem *new_item) {
 
-    stack->head.next = NULL;
-    stack->length = 0;
-
-    return stack;
+    return ll_insert_at(stack, new_item, 0);
 }
 
-int stack_is_empty(Stack *stack) { return stack->head.next == NULL; }
+LlItem *dst_pop(LList *stack) { return ll_remove(stack); }
 
-int stack_push(Stack *stack, ItemStack *new_item) {
+LlItem *dst_peek(LList *stack) {
 
-    if (!new_item)
-        return 0;
-
-    new_item->next = stack->head.next;
-    stack->head.next = new_item;
-    stack->length++;
-
-    return 1;
+    return !dst_is_empty(stack) ? stack->head.next : NULL;
 }
 
-ItemStack *stack_pop(Stack *stack) {
+int dst_offset(LList *stack, void *elmnt, ICOMPARATOR) {
 
-    if (stack_is_empty(stack))
-        return NULL;
-
-    ItemStack *item = stack->head.next;
-    stack->head.next = item->next;
-    stack->length--;
-
-    return item;
-}
-
-ItemStack *stack_peek(Stack *stack) {
-
-    if (stack_is_empty(stack))
-        return NULL;
-
-    return stack->head.next;
-}
-
-int stack_search(Stack *stack, void *elmnt, ICOMPARATOR) {
-
-    if (stack_is_empty(stack))
-        return -1;
-
-    int i = 0;
-    ItemStack *item_r = stack->head.next;
-
-    while (item_r && comparator(elmnt, item_r)) {
-        item_r = item_r->next;
-        i++;
-    }
-
-    return item_r ? i : -1;
+    return ll_index_of(stack, elmnt, comparator);
 }

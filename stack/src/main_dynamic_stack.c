@@ -14,35 +14,34 @@ enum options {
     PUSH,
     POP,
     PEEK,
-    SEARCH,
+    OFFSET,
 };
 
 typedef struct _Cel {
     char data;
-    ItemStack item_stack;
+    LlItem item_stack;
 } Cel;
 
 int comparator(void *const a, void *const b);
 
-void stack_show(Stack *stack);
+void stack_show(LList *stack);
 
 int main(int argc, char const *argv[]) {
-
-    int op, rs;
-    char *value1;
-    Cel *cel_aux = NULL;
-    ItemStack *item_stack_aux = NULL;
 
     char test_cases[INPUTSIZE][2] = {
         {POP, '_'},    {PUSH, 'A'},   {PUSH, 'B'}, {POP, '_'},    {POP, '_'},
         {POP, '_'},    {PUSH, 'C'},   {PUSH, 'D'}, {POP, '_'},    {PUSH, 'E'},
         {POP, '_'},    {PUSH, 'F'},   {POP, '_'},  {PUSH, 'G'},   {PUSH, 'H'},
         {PUSH, 'G'},   {POP, '_'},    {PUSH, 'H'}, {PUSH, 'H'},   {PUSH, 'K'},
-        {PUSH, 'G'},   {PEEK, '_'},   {POP, '_'},  {SEARCH, 'G'}, {SEARCH, 'H'},
-        {SEARCH, 'K'}, {SEARCH, 'T'}, {PUSH, 'T'}, {SEARCH, 'T'}, {POP, '_'},
+        {PUSH, 'G'},   {PEEK, '_'},   {POP, '_'},  {OFFSET, 'G'}, {OFFSET, 'H'},
+        {OFFSET, 'K'}, {OFFSET, 'T'}, {PUSH, 'T'}, {OFFSET, 'T'}, {POP, '_'},
     };
 
-    Stack *stack = stack_new();
+    int op, rs;
+    char *value1;
+    Cel *cel_aux = NULL;
+    LlItem *item_stack_aux = NULL;
+    LList *stack = dst_new();
 
     printf("+++++ DYNAMIC STACK +++++\n\n");
     stack_show(stack);
@@ -59,13 +58,13 @@ int main(int argc, char const *argv[]) {
             cel_aux = malloc(sizeof(Cel));
             cel_aux->data = *value1;
 
-            rs = stack_push(stack, &cel_aux->item_stack);
+            rs = dst_push(stack, &cel_aux->item_stack);
             rs == 1 ? printf("Success\n") : printf("Fail!\n");
             stack_show(stack);
             break;
         case POP:
             printf("POP: ");
-            item_stack_aux = stack_pop(stack);
+            item_stack_aux = dst_pop(stack);
 
             item_stack_aux
                 ? printf("%c\n",
@@ -76,16 +75,16 @@ int main(int argc, char const *argv[]) {
             break;
         case PEEK:
             printf("PEEK: ");
-            item_stack_aux = stack_peek(stack);
+            item_stack_aux = dst_peek(stack);
             item_stack_aux
                 ? printf("%c\n",
                          ((Cel *)GETSTRUCTFROM(item_stack_aux, Cel, item_stack))
                              ->data)
                 : printf("Empty!\n");
             break;
-        case SEARCH:
-            printf("SEARCH (%c): ", *value1);
-            rs = stack_search(stack, value1, comparator);
+        case OFFSET:
+            printf("OFFSET (%c): ", *value1);
+            rs = dst_offset(stack, value1, comparator);
             rs != -1 ? printf("%d\n", rs) : printf("Not Found!\n");
             break;
         default:
@@ -106,22 +105,19 @@ int comparator(void *const a, void *const b) {
     return elmnt - cel->data;
 }
 
-void stack_show(Stack *stack) {
+void stack_show(LList *stack) {
 
     printf("\n @ Stack SHOW\n");
 
-    if (stack_is_empty(stack)) {
-        printf("| Empty!\n");
-        printf("----------\n\n");
-
-        return;
+    if (dst_is_empty(stack)) {
+        printf("| Empty!\n----------");
+    } else {
+        for (LlItem *item_r = stack->head.next; item_r; item_r = item_r->next) {
+            printf("| -> %c\n",
+                   ((Cel *)GETSTRUCTFROM(item_r, Cel, item_stack))->data);
+        }
+        printf("----------\n   [%lu]", stack->length);
     }
-
-    for (ItemStack *item_r = stack->head.next; item_r; item_r = item_r->next) {
-        printf("| -> %c\n",
-               ((Cel *)GETSTRUCTFROM(item_r, Cel, item_stack))->data);
-    }
-    printf("----------\n   [%d]", stack->length);
 
     printf("\n\n");
 }

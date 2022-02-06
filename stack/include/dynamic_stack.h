@@ -4,28 +4,57 @@
  *
  */
 
-#include "./stack.h"
+#include "../../list/include/linked_list.h"
 
 /**
- * struct _ItemStack.
- * attr: next - Pointer to the next element in the chain.
+ * Create a new Dynamic Stack.
+ *  The Dynamic Stack works over Linked List.
+ *
+ * @return A LList instance or Null in case of error.
  */
-struct _ItemStack {
-    struct _ItemStack *next;
-};
+LList *dst_new();
 
 /**
- * struct _Stack.
- * attr: head - Head element in the stack.
- * attr: length - Number of elements currently present in the stack.
+ * Checks if the stack is empty.
+ *
+ * @param stack LList pointer.
+ * @return Or 1 if empty or 0 if not empty.
  */
-struct _Stack {
-    struct _ItemStack head;
-    int length;
-};
+int dst_is_empty(LList *stack);
 
 /**
- * Create a new stack.
- * @return A stack instance or Null in case of error.
+ * Push a new item onto the stack.
+ *
+ * @param stack LList pointer.
+ * @param new_item LlItem for insertion.
+ * @return Or 1 if added or 0 if not added.
  */
-Stack *stack_new();
+int dst_push(LList *stack, LlItem *new_item);
+
+/**
+ * Remove the item at the top of the stack.
+ *
+ * @param stack LList pointer.
+ * @return The item removed, or NULL if stack is empty.
+ */
+LlItem *dst_pop(LList *stack);
+
+/**
+ * Return the item on the top of the stack.
+ *
+ * @param stack LList pointer.
+ * @return Or top item object or NULL if stack is empty.
+ */
+LlItem *dst_peek(LList *stack);
+
+/**
+ * Returns the offset between the top of the stack
+ *  and the LlItem with the specified value.
+ *
+ * @param stack LList pointer.
+ * @param elmnt void pointer.
+ * @param comparator Comparison function.
+ *      Input in comparator(elmnt, LlItem_curr).
+ * @return The offset if found, or -1 if not found.
+ */
+int dst_offset(LList *stack, void *elmnt, ICOMPARATOR);
