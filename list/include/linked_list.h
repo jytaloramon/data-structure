@@ -115,12 +115,12 @@ size_t ll_count(LList *ll, void *elmnt, ICOMPARATOR);
 int ll_index_of(LList *ll, void *elmnt, ICOMPARATOR);
 
 /**
- * Merge two List.
+ * Join two List.
  * @param ll1 LList pointer 1.
  * @param ll2 LList pointer 2.
  * @return Or 1 if successful or 0 if not successful.
  */
-int ll_merge(LList *ll1, LList *ll2);
+int ll_join(LList *ll1, LList *ll2);
 
 /**
  * Add an item after a base item.
@@ -172,9 +172,9 @@ size_t ll_item_count(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR);
 int ll_item_offset(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR);
 
 /**
- * Merge two sequences of DllItem.
+ * Join two sequences of DllItem.
  * @param item_ls1 The last item seq_1.
  * @param item_fs2 The first item seq_2.
  * @return Or 1 if successful or 0 if not successful.
  */
-int ll_item_merge(LlItem *item_ls1, LlItem *item_fs2);
+int ll_item_join(LlItem *item_ls1, LlItem *item_fs2);

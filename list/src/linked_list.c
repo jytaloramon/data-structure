@@ -109,7 +109,7 @@ int ll_index_of(LList *ll, void *elmnt, ICOMPARATOR) {
     return ll_item_offset(ll->head.next, NULL, elmnt, comparator);
 }
 
-int ll_merge(LList *ll1, LList *ll2) {
+int ll_join(LList *ll1, LList *ll2) {
 
     if (!ll1 || !ll2)
         return 0;
@@ -120,7 +120,7 @@ int ll_merge(LList *ll1, LList *ll2) {
     if (ll_is_empty(ll1))
         ll1->head.next = ll2->head.next;
     else
-        ll_item_merge(ll1->rear, ll2->head.next);
+        ll_item_join(ll1->rear, ll2->head.next);
 
     ll1->length += ll2->length;
     ll1->rear = ll2->rear;
@@ -194,7 +194,7 @@ int ll_item_offset(LlItem *item_s, LlItem *item_e, void *elmnt, ICOMPARATOR) {
     return -1;
 }
 
-int ll_item_merge(LlItem *item_ls1, LlItem *item_fs2) {
+int ll_item_join(LlItem *item_ls1, LlItem *item_fs2) {
 
     if (!item_ls1 || !item_fs2)
         return 0;
