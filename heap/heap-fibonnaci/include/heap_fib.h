@@ -6,8 +6,16 @@
 #include "../../../list/include/circular_doubly_linked_list.h"
 #include "stdlib.h"
 
+/**
+ * Define the prototype of the struct.
+ * struct _HeapFib HeapFib.
+ */
 typedef struct _HeapFib HeapFib;
 
+/**
+ * Define the prototype of the struct.
+ * struct _HeapFibItem HeapFibItem.
+ */
 typedef struct _HeapFibItem HeapFibItem;
 
 struct _HeapFibItem {
@@ -15,7 +23,6 @@ struct _HeapFibItem {
     struct _DllItem cdll_item;
     int is_marked;
     size_t degree;
-    int value;
 };
 
 struct _HeapFib {
@@ -24,7 +31,7 @@ struct _HeapFib {
 };
 
 /**
- * Create a new HeapFib structure.
+ * Create a new HeapFib.
  *
  * @return A HeapFib instance or Null in case of error.
  */
@@ -63,11 +70,12 @@ HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR);
  * Removes the given item from the heap.
  *
  * @param heap HeapFib instance.
+ * @param rm_item Item to be removed
  * @param comparator Function comparator.
  *  Input in comparator(HeapFibItem, HeapFibItem).
  * @return int Or 1 on success or 0 on failure.
  */
-int *heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
+int heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
 
 /**
  * Updates the heap state from an item
@@ -77,7 +85,7 @@ int *heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
  * @param up_item Updated item.
  * @param comparator Function comparator.
  *  Input in comparator(HeapFibItem, HeapFibItem).
- * @return int Or 1 on success or 0 on failure.
+ * @return Or 1 on success or 0 on failure.
  */
 int heapf_decrease_key(HeapFib *heap, HeapFibItem *up_item, ICOMPARATOR);
 
@@ -91,8 +99,8 @@ int heapf_decrease_key(HeapFib *heap, HeapFibItem *up_item, ICOMPARATOR);
 void heapf_consolidate(HeapFib *heap, ICOMPARATOR);
 
 /**
- * Remove item from its current position
- *  and insert into root list.
+ * Removes the item from its position
+ * and moves it to the root list.
  *
  * @param heap HeapFib instance.
  * @param up_item Updated item.
@@ -119,7 +127,7 @@ HeapFibItem *heapf_peek(HeapFib *heap);
 HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR);
 
 /**
- * Concatenates two heaps. Making Heap receive heap_from.
+ * Join two heaps. Making Heap receive heap_from.
  *
  * @param heap HeapFib instance.
  * @param heap_from HeapFib instance.
@@ -128,3 +136,12 @@ HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR);
  * @return int Or 1 on success or 0 on failure.
  */
 int heapf_union(HeapFib *heap, HeapFib *heap_from, ICOMPARATOR);
+
+/**
+ * Remove an item that belongs to the root list.
+ *
+ * @param heap HeapFib instance.
+ * @param rm_item Item to be removed.
+ * @return Or 1 on success or 0 on failure.
+ */
+int heapf_item_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);

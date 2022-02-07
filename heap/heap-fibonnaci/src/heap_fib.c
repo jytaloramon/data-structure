@@ -47,43 +47,22 @@ int heapf_insert(HeapFib *heap, HeapFibItem *new_item, ICOMPARATOR) {
 
 HeapFibItem *heapf_extract_min(HeapFib *heap, ICOMPARATOR) {
 
-    if (heapf_is_empty(heap))
-        return NULL;
-
     HeapFibItem *min_item_rm = heap->min_item;
-
-    if (min_item_rm->child) {
-        min_item_rm->child->father = NULL;
-        for (HeapFibItem *item_r = (HeapFibItem *)GETSTRUCTFROM(
-                 min_item_rm->child->cdll_item.next, HeapFibItem, cdll_item);
-             item_r != min_item_rm->child;
-             item_r = (HeapFibItem *)GETSTRUCTFROM(item_r->cdll_item.next,
-                                                     HeapFibItem, cdll_item)) {
-            item_r->father = NULL;
-        }
-
-        cdll_item_join(&min_item_rm->cdll_item, &min_item_rm->child->cdll_item);
-    }
-
-    heap->min_item =
-        cdll_item_is_alone(&min_item_rm->cdll_item)
-            ? NULL
-            : (HeapFibItem *)GETSTRUCTFROM(min_item_rm->cdll_item.next,
-                                           HeapFibItem, cdll_item);
-
-    min_item_rm->is_marked = min_item_rm->degree = 0;
-    min_item_rm->child = NULL;
-    cdll_item_remove(&min_item_rm->cdll_item);
-
-    if (!heapf_is_empty(heap))
-        heapf_consolidate(heap, comparator);
-
-    --heap->length;
+    heapf_item_remove(heap, min_item_rm, comparator);
 
     return min_item_rm;
 }
 
-int *heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR);
+int heapf_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR) {
+
+    if (heapf_is_empty(heap) || !rm_item)
+        return 0;
+
+    if (rm_item->father)
+        heapf_cut(heap, rm_item);
+
+    return heapf_item_remove(heap, rm_item, comparator);
+}
 
 int heapf_decrease_key(HeapFib *heap, HeapFibItem *up_item, ICOMPARATOR) {
 
@@ -203,7 +182,8 @@ HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR) {
     if (heapf_is_empty(heap))
         return NULL;
 
-    int ls = 0, le = 0, rs = 0;
+    int rs = 0;
+    size_t ls = 0, le = 0;
     DllItem *lists[heap->length];
     HeapFibItem *item_s = NULL;
 
@@ -259,6 +239,41 @@ int heapf_union(HeapFib *heap, HeapFib *heap_from, ICOMPARATOR) {
 
     heap->min_item = min_global;
     heap->length += heap_from->length;
+
+    return 1;
+}
+
+int heapf_item_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR) {
+
+    if (heapf_is_empty(heap) || !rm_item)
+        return 0;
+
+    if (rm_item->child) {
+        rm_item->child->father = NULL;
+        for (HeapFibItem *item_r = (HeapFibItem *)GETSTRUCTFROM(
+                 rm_item->child->cdll_item.next, HeapFibItem, cdll_item);
+             item_r != rm_item->child;
+             item_r = (HeapFibItem *)GETSTRUCTFROM(item_r->cdll_item.next,
+                                                   HeapFibItem, cdll_item)) {
+            item_r->father = NULL;
+        }
+
+        cdll_item_join(&heap->min_item->cdll_item, &rm_item->child->cdll_item);
+    }
+
+    heap->min_item = cdll_item_is_alone(&rm_item->cdll_item)
+                         ? NULL
+                         : (HeapFibItem *)GETSTRUCTFROM(rm_item->cdll_item.next,
+                                                        HeapFibItem, cdll_item);
+
+    rm_item->is_marked = rm_item->degree = 0;
+    rm_item->child = NULL;
+    cdll_item_remove(&rm_item->cdll_item);
+
+    if (!heapf_is_empty(heap))
+        heapf_consolidate(heap, comparator);
+
+    --heap->length;
 
     return 1;
 }
