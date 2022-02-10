@@ -85,8 +85,8 @@ void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
 
     HeapFibItem *item_s = heap->min_item,
                 **items_dg = calloc(heap->length, sizeof(HeapFibItem *)),
-                *item_r = (HeapFibItem *)GETSTRUCTFROM(item_s->cdll_item.next,
-                                                       HeapFibItem, cdll_item),
+                *item_r = GETSTRUCTFROM(item_s->cdll_item.next, HeapFibItem,
+                                        cdll_item),
                 *item_a = NULL, *item_b = NULL, *item_n = NULL;
 
     items_dg[item_s->degree] = item_s;
@@ -94,17 +94,20 @@ void heapf_consolidate(HeapFib *heap, ICOMPARATOR) {
     while (item_r != item_s) {
         item_a = item_r;
         item_b = items_dg[item_a->degree];
-        item_n = (HeapFibItem *)GETSTRUCTFROM(item_a->cdll_item.next,
-                                              HeapFibItem, cdll_item);
+        item_n = GETSTRUCTFROM(item_r->cdll_item.next, HeapFibItem, cdll_item);
 
         while (item_b) {
-
             items_dg[item_a->degree] = NULL;
 
             if (comparator(item_a, item_b) > 0) {
                 HeapFibItem *item_aux = item_a;
                 item_a = item_b;
                 item_b = item_aux;
+            }
+
+            if (item_b == item_s) {
+                item_s = GETSTRUCTFROM(item_b->cdll_item.next, HeapFibItem,
+                                       cdll_item);
             }
 
             cdll_item_remove(&item_b->cdll_item);
@@ -151,8 +154,8 @@ void heapf_cut(HeapFib *heap, HeapFibItem *up_item) {
                 father->child = NULL;
             } else {
                 if (&father->child->cdll_item == &item_r->cdll_item) {
-                    father->child = (HeapFibItem *)GETSTRUCTFROM(
-                        item_r->cdll_item.next, HeapFibItem, cdll_item);
+                    father->child = GETSTRUCTFROM(item_r->cdll_item.next,
+                                                  HeapFibItem, cdll_item);
                 }
 
                 cdll_item_remove(&item_r->cdll_item);
@@ -191,8 +194,7 @@ HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR) {
 
     while (ls < le) {
 
-        item_s =
-            (HeapFibItem *)GETSTRUCTFROM(lists[ls++], HeapFibItem, cdll_item);
+        item_s = GETSTRUCTFROM(lists[ls++], HeapFibItem, cdll_item);
 
         rs = comparator(elmnt, item_s);
         if (rs == 0)
@@ -201,11 +203,10 @@ HeapFibItem *heapf_find(HeapFib *heap, void *elmnt, ICOMPARATOR) {
         if (rs > 0 && item_s->child)
             lists[le++] = &item_s->child->cdll_item;
 
-        for (HeapFibItem *item_r = (HeapFibItem *)GETSTRUCTFROM(
-                 item_s->cdll_item.next, HeapFibItem, cdll_item);
-             item_r != item_s;
-             item_r = (HeapFibItem *)GETSTRUCTFROM(item_r->cdll_item.next,
-                                                   HeapFibItem, cdll_item)) {
+        for (HeapFibItem *item_r =
+                 GETSTRUCTFROM(item_s->cdll_item.next, HeapFibItem, cdll_item);
+             item_r != item_s; item_r = GETSTRUCTFROM(item_r->cdll_item.next,
+                                                      HeapFibItem, cdll_item)) {
 
             rs = comparator(elmnt, item_r);
             if (rs == 0)
@@ -250,21 +251,21 @@ int heapf_item_remove(HeapFib *heap, HeapFibItem *rm_item, ICOMPARATOR) {
 
     if (rm_item->child) {
         rm_item->child->father = NULL;
-        for (HeapFibItem *item_r = (HeapFibItem *)GETSTRUCTFROM(
-                 rm_item->child->cdll_item.next, HeapFibItem, cdll_item);
+        for (HeapFibItem *item_r = GETSTRUCTFROM(rm_item->child->cdll_item.next,
+                                                 HeapFibItem, cdll_item);
              item_r != rm_item->child;
-             item_r = (HeapFibItem *)GETSTRUCTFROM(item_r->cdll_item.next,
-                                                   HeapFibItem, cdll_item)) {
+             item_r = GETSTRUCTFROM(item_r->cdll_item.next, HeapFibItem,
+                                    cdll_item)) {
             item_r->father = NULL;
         }
 
         cdll_item_join(&heap->min_item->cdll_item, &rm_item->child->cdll_item);
     }
 
-    heap->min_item = cdll_item_is_alone(&rm_item->cdll_item)
-                         ? NULL
-                         : (HeapFibItem *)GETSTRUCTFROM(rm_item->cdll_item.next,
-                                                        HeapFibItem, cdll_item);
+    heap->min_item =
+        cdll_item_is_alone(&rm_item->cdll_item)
+            ? NULL
+            : GETSTRUCTFROM(rm_item->cdll_item.next, HeapFibItem, cdll_item);
 
     rm_item->is_marked = rm_item->degree = 0;
     rm_item->child = NULL;
