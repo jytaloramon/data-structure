@@ -1,11 +1,9 @@
 COMPILER=gcc
 FLAGS=-Wall
 
-SOURCEPATH=src
-SOURCEINCLUDE=include
+SRCPATH=src
+SRCINCLUDE=include
 BUILDPATH=build
-
-#SRCfolderPATH=/folder
 
 # General use
 
@@ -18,11 +16,11 @@ clear: $(BUILDPATH)
 clear_build: $(BUILDPATH)
 	rm -rf $(BUILDPATH)/*
 
-heap.o: $(SOURCEINCLUDE)/heap.h $(SOURCEPATH)/heap.c
-	$(COMPILER) $(FLAGS) $(SOURCEPATH)/heap.c -c
-	mv heap.o $(BUILDPATH)/
+heap_b.o: $(SRCPATH)/heap_b.c
+	$(COMPILER) $(FLAGS) $(SRCPATH)/heap_b.c -c
+	mv heap_b.o $(BUILDPATH)/
 
-main_heap: $(BUILDPATH) $(SOURCEPATH)/main_heap.c heap.o
-	$(COMPILER) $(FLAGS) $(BUILDPATH)/heap.o \
-		$(SOURCEPATH)/main_heap.c -o main_heap
-	mv main_heap $(BUILDPATH)/
+main_heap_b: $(BUILDPATH) heap_b.o $(SRCPATH)/main_heap_b.c 
+	$(COMPILER) $(FLAGS) $(BUILDPATH)/heap_b.o \
+		$(SRCPATH)/main_heap_b.c -o main_heap_b
+	mv main_heap_b $(BUILDPATH)/
