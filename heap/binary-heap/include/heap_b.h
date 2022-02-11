@@ -26,7 +26,7 @@ struct _Heap {
  * @param size maximum array capacity.
  * @return A Heap instance or Null in case of error.
  */
-Heap *heap_new(ItemHeap **arr, int length, int size);
+Heap *heapb_new(ItemHeap **arr, int length, int size);
 
 /**
  * Build a heap.
@@ -34,21 +34,21 @@ Heap *heap_new(ItemHeap **arr, int length, int size);
  * @param comparator Function comparator.
  * @return Or 1 on success, or 0 on failure.
  */
-int heap_build(Heap *heap, ICOMPARATOR);
+int heapb_build(Heap *heap, ICOMPARATOR);
 
 /**
  * Checks if the heap is empty.
  * @param heap Heap instance.
  * @return Or 1 if empty or 0 if not empty.
  */
-int heap_is_empty(Heap *heap);
+int heapb_is_empty(Heap *heap);
 
 /**
  * Checks if the heap is full.
  * @param heap Heap instance.
  * @return Or 1 if full or 0 if not full.
  */
-int heap_is_full(Heap *heap);
+int heapb_is_full(Heap *heap);
 
 /**
  * Heapify bottom-up
@@ -57,7 +57,7 @@ int heap_is_full(Heap *heap);
  * @param comparator Function comparator.
  * @return Final position of the process.
  */
-int heapify_up(int posi, ItemHeap **arr, ICOMPARATOR);
+int heapb_heapify_up(int posi, ItemHeap **arr, ICOMPARATOR);
 
 /**
  * Heapify top-down.
@@ -67,7 +67,7 @@ int heapify_up(int posi, ItemHeap **arr, ICOMPARATOR);
  * @param comparator Function comparator.
  * @return Final position of the process.
  */
-int heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR);
+int heapb_heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR);
 
 /**
  * Insert a new element.
@@ -76,7 +76,7 @@ int heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR);
  * @param comparator Function comparator.
  * @return Or 1 on success, or 0 on failure.
  */
-int heap_insert(Heap *heap, ItemHeap *item, ICOMPARATOR);
+int heapb_insert(Heap *heap, ItemHeap *item, ICOMPARATOR);
 
 /**
  * Remove the top heap element.
@@ -84,11 +84,11 @@ int heap_insert(Heap *heap, ItemHeap *item, ICOMPARATOR);
  * @param comparator Function comparator.
  * @return Or the instance removed, or NULL on failure.
  */
-ItemHeap *heap_remove(Heap *heap, ICOMPARATOR);
+ItemHeap *heapb_remove(Heap *heap, ICOMPARATOR);
 
 /**
  * Return the top heap element
  * @param heap Heap instance.
  * @return Or the instance of the first element, or NULL on failure.
  */
-ItemHeap *heap_peek(Heap *heap);
+ItemHeap *heapb_peek(Heap *heap);

@@ -4,7 +4,7 @@
  */
 
 #include "stdlib.h"
-#include "../include/heap.h"
+#include "../include/heap_b.h"
 
 #define SWAPPOINTER(s, t)                                                      \
     do {                                                                       \
@@ -13,7 +13,7 @@
         t = aux;                                                               \
     } while (0);
 
-Heap *heap_new(ItemHeap **arr, int length, int size) {
+Heap *heapb_new(ItemHeap **arr, int length, int size) {
 
     Heap *heap = malloc(sizeof(Heap));
 
@@ -27,22 +27,22 @@ Heap *heap_new(ItemHeap **arr, int length, int size) {
     return heap;
 }
 
-int heap_build(Heap *heap, ICOMPARATOR) {
+int heapb_build(Heap *heap, ICOMPARATOR) {
 
     if (heap->lenght < 2)
         return 1;
 
     for (int i = FATHER(heap->lenght - 1); i >= 0; i--)
-        heapify_down(i, heap->arr, heap->lenght, comparator);
+        heapb_heapify_down(i, heap->arr, heap->lenght, comparator);
 
     return 1;
 }
 
-int heap_is_empty(Heap *heap) { return heap->lenght == 0; }
+int heapb_is_empty(Heap *heap) { return heap->lenght == 0; }
 
-int heap_is_full(Heap *heap) { return heap->lenght == heap->size; }
+int heapb_is_full(Heap *heap) { return heap->lenght == heap->size; }
 
-int heapify_up(int posi, ItemHeap **arr, ICOMPARATOR) {
+int heapb_heapify_up(int posi, ItemHeap **arr, ICOMPARATOR) {
 
     int i = posi, f = FATHER(i);
 
@@ -55,7 +55,7 @@ int heapify_up(int posi, ItemHeap **arr, ICOMPARATOR) {
     return i;
 }
 
-int heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR) {
+int heapb_heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR) {
 
     int i = posi, idx_min_child = 0;
 
@@ -78,31 +78,31 @@ int heapify_down(int posi, ItemHeap **arr, int length, ICOMPARATOR) {
     return FATHER(i);
 }
 
-int heap_insert(Heap *heap, ItemHeap *item, ICOMPARATOR) {
+int heapb_insert(Heap *heap, ItemHeap *item, ICOMPARATOR) {
 
-    if (heap_is_full(heap) || !item)
+    if (heapb_is_full(heap) || !item)
         return -1;
 
     heap->arr[heap->lenght++] = item;
 
-    return heapify_up(heap->lenght - 1, heap->arr, comparator);
+    return heapb_heapify_up(heap->lenght - 1, heap->arr, comparator);
 }
 
-ItemHeap *heap_remove(Heap *heap, ICOMPARATOR) {
+ItemHeap *heapb_remove(Heap *heap, ICOMPARATOR) {
 
-    if (heap_is_empty(heap))
+    if (heapb_is_empty(heap))
         return NULL;
 
     void *elmnt = heap->arr[0];
     heap->arr[0] = heap->arr[--heap->lenght];
-    heapify_down(0, heap->arr, heap->lenght, comparator);
+    heapb_heapify_down(0, heap->arr, heap->lenght, comparator);
 
     return elmnt;
 }
 
-ItemHeap *heap_peek(Heap *heap) {
+ItemHeap *heapb_peek(Heap *heap) {
 
-    if (heap_is_empty(heap))
+    if (heapb_is_empty(heap))
         return NULL;
 
     return heap->arr[0];
